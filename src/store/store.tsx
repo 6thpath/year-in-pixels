@@ -34,5 +34,5 @@ export const StoreProvider = ({ children }) => (
 /**
  * React hook for consuming store
  */
-export const useStore = (): [typeof initialStates, (arg: { action: string; payload: any }) => {}] =>
+export const useStore = (): [typeof initialStates, (arg: { type: string; payload: any }) => void] =>
   useContext(StoreContext) as any

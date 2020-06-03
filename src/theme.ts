@@ -28,23 +28,17 @@ export default {
    * Colors
    */
   colors: {
-    black: '#000000',
-    white: '#fff',
-    success: '#34a853',
     body: '#f7f7f7',
+    black: '#000000',
+    white: '#ffffff',
 
     primary: {
-      light: '#a6b1e1',
+      lighter: '#f4eeff',
+      light: '#dcd6f7',
+      semi: '#a6b1e1',
       main: '#424874',
       dark: '#363b5e',
-      contrastText: '#f4eeff',
-    },
-
-    secondary: {
-      light: '#ff4081',
-      main: '#f50057',
-      dark: '#c51162',
-      contrastText: '#fff',
+      contrastText: '#ffffff',
     },
 
     text: {
@@ -54,27 +48,23 @@ export default {
       hint: 'rgba(0, 0, 0, 0.38)',
     },
 
-    border: {
-      light: '#f5f5f5',
-      main: '#e0e0e0',
-      dark: '#bdbdbd',
-    },
-
     skeleton: {
       background: '#f3f3f3',
       foreground: '#ecebeb',
     },
 
     error: {
-      light: '#ff7875',
-      main: '#ff4d4f',
-      dark: '#f5222d',
-      contrastText: '#fff',
+      lighter: '#ffccc7',
+      light: '#ffa39e',
+      semi: '#ff4d4f',
+      main: '#f5222d',
+      dark: '#cf1322',
+      contrastText: '#ffffff',
     },
 
-    warning: '#FFB818',
-
-    info: '#4169E1',
+    success: '#52c41a',
+    warning: '#fadb14',
+    info: '#1890ff',
 
     grey: {
       50: '#fafafa',

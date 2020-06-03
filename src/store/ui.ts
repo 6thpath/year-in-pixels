@@ -2,18 +2,19 @@
  * Actions types
  */
 export const SET_IS_DESKTOP = 'SET_IS_DESKTOP'
+export const SET_GLOBAL_MESSAGE = 'SET_GLOBAL_MESSAGE'
 
 /**
  * Initial State
  */
 export const uiInitialState = {
   isDesktop: false,
+  globalMessage: '',
 }
 
-type ActionTypes = 'SET_IS_DESKTOP'
 interface IAction {
+  type: string
   payload: any
-  type: ActionTypes
 }
 
 /**
@@ -24,7 +25,14 @@ export const uiReducer = (state = uiInitialState, action: IAction) => {
     case SET_IS_DESKTOP: {
       return {
         ...state,
-        ...action.payload,
+        isDesktop: action.payload,
+      }
+    }
+
+    case SET_GLOBAL_MESSAGE: {
+      return {
+        ...state,
+        globalMessage: action.payload,
       }
     }
 

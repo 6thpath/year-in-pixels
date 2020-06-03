@@ -19,6 +19,7 @@ const FormContainer = styled.div`
   position: absolute;
 
   background-color: #fff;
+  box-shadow: ${(p) => p.theme.shadows.md};
   padding: 10px;
   border-radius: ${(p) => p.theme.radius.lg};
 `

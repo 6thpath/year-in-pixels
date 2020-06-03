@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Switch, Route, withRouter } from 'react-router-dom'
 
+import NotFound from 'components/NotFound'
+
 import Home from 'pages/Home'
 import * as Routes from 'routes'
 
@@ -30,7 +32,7 @@ const AppLayout = memo(({ location }) => {
         <Switch>
           <Route exact path={Routes.HOME} component={Home} />
 
-          <Route component={<div>404</div>} />
+          <Route component={NotFound} />
         </Switch>
       </Root>
     </>

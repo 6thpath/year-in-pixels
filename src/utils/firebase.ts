@@ -8,9 +8,10 @@ import 'firebase/analytics'
 import 'firebase/auth'
 import 'firebase/firestore'
 
-const provider = new firebase.auth.GoogleAuthProvider()
+const googleProvider = new firebase.auth.GoogleAuthProvider()
+const facebookProvider = new firebase.auth.FacebookAuthProvider()
 
-export { firebase, provider }
+export { firebase, googleProvider, facebookProvider }
 
 export function initFirebase() {
   const firebaseConfig = {
@@ -26,4 +27,15 @@ export function initFirebase() {
 
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig)
+}
+
+export function getUsersProfile(user) {
+  return {
+    uid: user.uid,
+    name: user.displayName,
+    photoUrl: user.photoURL,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    providerData: user.providerData,
+  }
 }

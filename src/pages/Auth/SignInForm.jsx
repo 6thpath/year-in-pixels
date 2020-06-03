@@ -1,12 +1,16 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import { Tooltip } from 'antd'
 
+import { useStore } from 'store'
+import { firebase } from 'utils/firebase'
 import { emailRegex } from 'utils/regex'
-import theme from 'theme'
 
-import { GhostButton, ButtonLink } from 'components/Button'
+import { Button, ButtonLink } from 'components/Button'
 import { Hr } from 'components/Text'
+import Tooltip from 'components/Tooltip'
+
+import FacebookSignIn from './FacebookSignIn'
+import GoogleSignIn from './GoogleSignIn'
 
 const Form = styled.form`
   position: relative;
@@ -31,15 +35,17 @@ const FocusBorder = styled.span`
   height: 2px;
   background: linear-gradient(
     to right,
-    ${(p) => (p.hasError ? '#ffccc7' : '#dcd6f7')},
-    ${(p) => (p.hasError ? '#ff4d4f' : '#424874')}
+    ${(p) => (p.hasError ? p.theme.colors.error.lighter : p.theme.colors.primary.lighter)},
+    ${(p) => (p.hasError ? p.theme.colors.error.main : p.theme.colors.primary.main)}
   );
   transition: all 0.4s;
   margin-bottom: ${(p) => p.theme.spacing.md};
   z-index: 2;
 `
 
-const Label = styled.label``
+const Label = styled.label`
+  user-select: none;
+`
 
 const Input = styled.input`
   width: 100%;
@@ -50,7 +56,12 @@ const Input = styled.input`
   border-width: 0 0 2px 0;
   border-style: solid;
   background: transparent;
-  border-image: linear-gradient(to right, #dcd6f7, #f4eeff) 1;
+  border-image: linear-gradient(
+      to right,
+      ${(p) => p.theme.colors.primary.lighter},
+      ${(p) => p.theme.colors.primary.light}
+    )
+    1;
   z-index: 2;
 
   &:focus ~ #${(p) => p.borderId} {
@@ -80,52 +91,6 @@ const Input = styled.input`
   }
 `
 
-const SignInButton = styled.button`
-  user-select: none;
-  outline: none;
-  width: 100%;
-  position: relative;
-  z-index: 1; /* matters! */
-  overflow: hidden;
-  padding: ${(p) => p.theme.spacing.xs};
-  margin-top: ${(p) => p.theme.spacing.xxs};
-  color: ${(p) => p.theme.colors.white};
-  font-size: ${(p) => p.theme.font.size.xs};
-  border: none;
-  border-radius: ${(p) => p.theme.radius.md};
-  background: linear-gradient(to right, #a6b1e1, #424874);
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    background: linear-gradient(to right, #dcd6f7, #a6b1e1);
-    transition: opacity 0.4s;
-    z-index: -1;
-  }
-
-  ${(p) => {
-    if (!p.disabled) {
-      return `
-  cursor: pointer;
-
-  &:hover::before {
-    opacity: 0.5;
-  }
-      `
-    }
-  }}
-
-  &:disabled::before {
-    background: ${(p) => p.theme.colors.grey[400]};
-    opacity: 1;
-  }
-`
-
 const ButtonsGroup = styled.div`
   width: 100%;
 
@@ -136,6 +101,8 @@ const ButtonsGroup = styled.div`
 `
 
 const SignInForm = () => {
+  // eslint-disable-next-line no-unused-vars
+  const [state, dispatch] = useStore()
   const [email, setEmail] = useState('')
   const [emailHasError, setEmailHasError] = useState('')
   const [password, setPassword] = useState('')
@@ -144,26 +111,40 @@ const SignInForm = () => {
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
 
+  const handleReset = () => {
+    setEmail('')
+    setEmailHasError('')
+    setPassword('')
+    setPasswordHasError('')
+  }
+
+  useEffect(() => () => handleReset(), [])
+
   const onEmailChange = (e) => {
     setEmail(e.target.value)
 
     if (e.target.value && !emailRegex.test(e.target.value)) {
       setEmailHasError('Please input a valid email address')
-    } else {
-      setEmailHasError('')
-    }
+    } else setEmailHasError('')
+  }
+
+  const onEmailBlur = () => {
+    if (emailHasError) setEmailHasError('')
   }
 
   const onPasswordChange = (e) => {
     setPassword(e.target.value)
 
-    if (!!passwordHasError) {
-      setPasswordHasError('')
-    }
+    if (!!passwordHasError) setPasswordHasError('')
+  }
+
+  const onPasswordBlur = () => {
+    if (passwordHasError) setPasswordHasError('')
   }
 
   const onSubmit = (e) => {
     e.preventDefault()
+
     if (!email.length) {
       setEmailHasError('Email is required')
       return emailRef.current.focus()
@@ -173,6 +154,7 @@ const SignInForm = () => {
       setPasswordHasError('Password is required')
       return passwordRef.current.focus()
     }
+
     if (!!emailHasError) {
       return emailRef.current.focus()
     } else setEmailHasError('')
@@ -181,34 +163,54 @@ const SignInForm = () => {
       return passwordRef.current.focus()
     } else setPasswordHasError('')
 
-    console.log(email, password)
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => {
+        switch (error.code) {
+          case 'auth/user-not-found': {
+            setEmailHasError(error.message)
+            break
+          }
+
+          case 'auth/wrong-password': {
+            setPasswordHasError(error.message)
+            break
+          }
+
+          default: {
+            setEmailHasError('Unknown error occurred. Try again later')
+          }
+        }
+      })
   }
 
   return (
     <Form onSubmit={onSubmit}>
-      <Tooltip visible={emailHasError} title={emailHasError} color={theme.colors.error.main}>
+      <Tooltip visible={!!emailHasError} title={emailHasError}>
         <FormItem>
           <Input
             ref={emailRef}
             onChange={onEmailChange}
             value={email}
-            placeholder=''
+            onBlur={onEmailBlur}
             labelId='email-label'
             borderId='email-border'
           />
           <Label id='email-label'>Email</Label>
-          <FocusBorder hasText={!!email.length} hasError={!!emailHasError} id='email-border' />
+          <FocusBorder id='email-border' hasText={!!email.length} hasError={!!emailHasError} />
         </FormItem>
       </Tooltip>
 
       <hr style={{ border: 'none' }} />
 
-      <Tooltip visible={passwordHasError} title={passwordHasError} color={theme.colors.error.main}>
+      <Tooltip visible={!!passwordHasError} title={passwordHasError}>
         <FormItem>
           <Input
             ref={passwordRef}
             onChange={onPasswordChange}
             value={password}
+            onBlur={onPasswordBlur}
             type='password'
             labelId='password-label'
             borderId='password-border'
@@ -218,24 +220,20 @@ const SignInForm = () => {
         </FormItem>
       </Tooltip>
 
-      <SignInButton
+      <Button
         type='submit'
         // disabled={!email || !password || emailHasError || passwordHasError}
       >
         SIGN IN TO YOUR ACCOUNT
-      </SignInButton>
+      </Button>
 
       <ButtonLink type='button'>SIGN UP</ButtonLink>
 
       <Hr content='Or sign in with social account' />
 
       <ButtonsGroup>
-        <GhostButton type='button' color='#4267B2' fontWeight='bold'>
-          FACEBOOK
-        </GhostButton>
-        <GhostButton type='button' color='#DB4437' fontWeight='bold'>
-          GOOGLE
-        </GhostButton>
+        <FacebookSignIn />
+        <GoogleSignIn />
       </ButtonsGroup>
     </Form>
   )
