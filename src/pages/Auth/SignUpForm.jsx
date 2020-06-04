@@ -227,6 +227,7 @@ const SignUpForm = ({ history, style }) => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Account created successfully, signing in...' })
         history.push(Routes.HOME)
       })
       .catch((error) => {
@@ -255,6 +256,7 @@ const SignUpForm = ({ history, style }) => {
               onBlur={onEmailBlur}
               labelId='reg-email-label'
               borderId='reg-email-border'
+              autoFocus
             />
             <Label id='reg-email-label'>Email</Label>
             <FocusBorder id='reg-email-border' hasText={!!email.length} hasError={!!emailHasError} />

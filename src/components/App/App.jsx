@@ -5,6 +5,7 @@ import { message } from 'antd'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useStore } from 'store'
 import { SET_AUTH_USER, CLEAR_AUTH_USER } from 'store/auth'
+import { CLEAR_DATA } from 'store/data'
 import { SET_IS_DESKTOP } from 'store/ui'
 import { firebase, getUsersProfile } from 'utils/firebase'
 import theme from 'theme'
@@ -33,6 +34,7 @@ const App = () => {
         // User is signed out.
         window.localStorage.removeItem('accessToken')
         dispatch({ type: CLEAR_AUTH_USER })
+        dispatch({ type: CLEAR_DATA })
       }
     })
   }, [dispatch])

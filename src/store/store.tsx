@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer } from 'react'
 
 import { authReducer, authInitialState } from './auth'
+import { dataReducer, dataInitialState } from './data'
 import { uiReducer, uiInitialState } from './ui'
 
 /**
@@ -8,6 +9,7 @@ import { uiReducer, uiInitialState } from './ui'
  */
 const initialStates = {
   auth: authInitialState,
+  data: dataInitialState,
   ui: uiInitialState,
 }
 
@@ -21,6 +23,7 @@ const StoreContext = createContext<typeof initialStates>(initialStates)
  */
 const reducers = (selectedStore, action) => ({
   auth: authReducer(selectedStore.auth, action),
+  data: dataReducer(selectedStore.data, action),
   ui: uiReducer(selectedStore.ui, action),
 })
 

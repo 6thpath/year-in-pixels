@@ -39,3 +39,7 @@ export function getUsersProfile(user) {
     providerData: user.providerData,
   }
 }
+
+export function signOut(onError = () => {}) {
+  return firebase.auth().signOut().catch(onError)
+}

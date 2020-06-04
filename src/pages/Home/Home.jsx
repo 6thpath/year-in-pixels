@@ -1,27 +1,30 @@
 import React from 'react'
-// import styled from 'styled-components'
-// import { generatePath } from 'react-router-dom'
-// import { BackTop } from 'antd'
+import styled from 'styled-components'
 
 import { useStore } from 'store'
 
-import { firebase } from 'utils/firebase'
+import HtmlHeader from 'components/HtmlHeader'
+import Header from './Header'
+
+const Container = styled.div`
+  width: 100%;
+  padding-top: 60px;
+`
 
 const Home = () => {
   // eslint-disable-next-line no-unused-vars
-  const [{ auth }] = useStore()
-  console.log('Home -> auth', auth.user)
+  const [{ auth }, dispatch] = useStore()
 
-  const signOut = () => {
-    firebase
-      .auth()
-      .signOut()
-      .catch(function (error) {
-        // An error happened.
-      })
-  }
+  const username = auth.user.name ? `${auth.user.name} | ` : ''
 
-  return <button onClick={signOut}>asd</button>
+  return (
+    <Container>
+      <HtmlHeader title={`${username}Year In Pixels`} />
+      <Header />
+
+      <p>adhajsdk</p>
+    </Container>
+  )
 }
 
 export default Home

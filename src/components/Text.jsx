@@ -37,3 +37,7 @@ export const Hr = styled.hr`
     background-color: #fcfcfa;
   }
 `
+
+export const NonSelectableText = styled.span`
+  user-select: none;
+`

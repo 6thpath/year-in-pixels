@@ -17,7 +17,7 @@
     "array-type": [true, "generic"],
     "member-access": [true, "no-public"],
     "no-empty-interface": true,
-    "no-empty": true,
+    "no-empty": false,
     "object-literal-sort-keys": false,
     "no-unused-expression": true,
     "max-classes-per-file": [true, 1],

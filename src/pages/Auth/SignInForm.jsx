@@ -219,6 +219,7 @@ const SignInForm = ({ history, style }) => {
               onBlur={onEmailBlur}
               labelId='email-label'
               borderId='email-border'
+              autoFocus
             />
             <Label id='email-label'>Email</Label>
             <FocusBorder id='email-border' hasText={!!email.length} hasError={!!emailHasError} />
