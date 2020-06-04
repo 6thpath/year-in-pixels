@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import { Modal } from 'antd'
 
+import './PwdPrompt.less'
+
 import theme from 'theme'
 
 const Form = styled.form`
@@ -17,6 +19,11 @@ const FormItem = styled.div`
   flex-direction: column;
   position: relative;
   width: 100%;
+`
+
+const EmailText = styled.p`
+  font-weight: ${theme.font.weight.bold};
+  margin-bottom: ${theme.spacing.sm};
 `
 
 const FocusBorder = styled.span`
@@ -58,16 +65,16 @@ const Input = styled.input`
   & ~ #${(p) => p.labelId} {
     position: absolute;
     left: 0;
-    top: 0;
-    font-size: ${theme.font.size.xs};
-    color: ${theme.colors.grey[400]};
+    top: ${(p) => (p.value ? '-20px' : 0)};
+    font-size: ${(p) => (p.value ? theme.font.size.xxs : theme.font.size.xs)};
+    color: ${(p) => (p.value ? theme.colors.primary.dark : theme.colors.grey[400])};
     transition: 0.3s;
     z-index: ${(p) => (p.value ? -1 : 1)};
   }
 
   &:focus ~ #${(p) => p.labelId} {
-    top: -16px;
-    font-size: 12px;
+    top: -20px;
+    font-size: ${theme.font.size.xxs};
     color: ${theme.colors.primary.dark};
     transition: 0.3s;
     z-index: 1;
@@ -104,6 +111,7 @@ const Prompt = ({ visible, title, description, email, close, afterClose }) => {
 
   return (
     <Modal
+      wrapClassName='styled-modal'
       visible={visible}
       title={title}
       centered
@@ -117,9 +125,7 @@ const Prompt = ({ visible, title, description, email, close, afterClose }) => {
       {description}
       <Form onSubmit={onSubmit}>
         <FormItem>
-          <p>
-            <b>{email}</b>
-          </p>
+          <EmailText>{email}</EmailText>
         </FormItem>
 
         <FormItem>

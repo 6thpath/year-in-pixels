@@ -10,6 +10,7 @@ import { firebase } from 'utils/firebase'
 const Home = () => {
   // eslint-disable-next-line no-unused-vars
   const [{ auth }] = useStore()
+  console.log('Home -> auth', auth.user)
 
   const signOut = () => {
     firebase

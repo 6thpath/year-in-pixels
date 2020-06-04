@@ -15,14 +15,14 @@ export { firebase, googleProvider, facebookProvider }
 
 export function initFirebase() {
   const firebaseConfig = {
-    apiKey: 'AIzaSyBS5a3RM4GrVK8f0T2uquHrMrePrBcG1V8',
-    authDomain: 'hows-your-day-ddfb1.firebaseapp.com',
-    databaseURL: 'https://hows-your-day-ddfb1.firebaseio.com',
-    projectId: 'hows-your-day-ddfb1',
-    storageBucket: 'hows-your-day-ddfb1.appspot.com',
-    messagingSenderId: '74102058540',
-    appId: '1:74102058540:web:db8fcf7ed86b3383e56b89',
-    measurementId: 'G-X86B1GXHMX',
+    apiKey: 'AIzaSyBITUXkz-otukn4Jpzke4ANwGHooyfgGFw',
+    authDomain: 'year-in-pixels-af189.firebaseapp.com',
+    databaseURL: 'https://year-in-pixels-af189.firebaseio.com',
+    projectId: 'year-in-pixels-af189',
+    storageBucket: 'year-in-pixels-af189.appspot.com',
+    messagingSenderId: '777269983218',
+    appId: '1:777269983218:web:177f594fee6a859b6f9d6b',
+    measurementId: 'G-PMDWME95P1',
   }
 
   // Initialize Firebase

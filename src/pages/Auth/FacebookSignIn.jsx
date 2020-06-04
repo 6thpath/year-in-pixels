@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
+import { LoadingOutlined } from '@ant-design/icons'
 
 import { useStore } from 'store'
-import { SET_AUTH_USER } from 'store/auth'
 import { SET_GLOBAL_MESSAGE } from 'store/ui'
 import { firebase, googleProvider, facebookProvider } from 'utils/firebase'
 
@@ -13,22 +13,18 @@ import Prompt from './PwdPrompt'
 const FacebookSignIn = () => {
   // eslint-disable-next-line no-unused-vars
   const [store, dispatch] = useStore()
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
   const signInWithFacebook = () => {
     dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Signing in...' })
+    setLoading(true)
 
     firebase
       .auth()
       .signInWithPopup(facebookProvider)
       .then((result) => {
-        dispatch({
-          type: SET_AUTH_USER,
-          payload: {
-            user: result.user,
-            token: result.credential.accessToken,
-          },
-        })
+        window.localStorage.setItem('accessToken', result.credential.accessToken)
       })
       .catch((error) => {
         switch (error.code) {
@@ -82,13 +78,14 @@ const FacebookSignIn = () => {
       })
       .finally(() => {
         dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' })
+        setLoading(false)
       })
   }
 
   return (
     <Tooltip placement='top' visible={!!error} title={error}>
-      <BorderButton onClick={signInWithFacebook} type='button' color='#4267B2' fontWeight='bold'>
-        FACEBOOK
+      <BorderButton onClick={signInWithFacebook} disabled={loading} type='button' color='#4267B2' fontWeight='bold'>
+        {loading ? <LoadingOutlined /> : 'FACEBOOK'}
       </BorderButton>
     </Tooltip>
   )

@@ -27,7 +27,6 @@ export const authReducer = (state = authInitialState, action: IAction) => {
       return {
         ...state,
         user: action.payload?.user,
-        token: action.payload?.token,
       }
 
     case SET_TOKEN:

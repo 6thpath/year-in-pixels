@@ -1,12 +1,13 @@
-import React, { memo } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Switch, Route, withRouter } from 'react-router-dom'
 
-import NotFound from 'components/NotFound'
-
-import Home from 'pages/Home'
 import * as Routes from 'routes'
+
+import NotFound from 'components/NotFound'
+import Home from 'pages/Home'
+import ScrollToTop from './ScrollToTop'
 
 const Root = styled.div`
   display: flex;
@@ -25,19 +26,21 @@ const Root = styled.div`
   }
 `
 
-const AppLayout = memo(({ location }) => {
+const AppLayout = () => {
   return (
     <>
       <Root>
-        <Switch>
-          <Route exact path={Routes.HOME} component={Home} />
+        <ScrollToTop>
+          <Switch>
+            <Route exact path={Routes.HOME} component={Home} />
 
-          <Route component={NotFound} />
-        </Switch>
+            <Route component={NotFound} />
+          </Switch>
+        </ScrollToTop>
       </Root>
     </>
   )
-})
+}
 
 AppLayout.propTypes = {
   location: PropTypes.object.isRequired,

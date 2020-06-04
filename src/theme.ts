@@ -19,7 +19,7 @@ export default {
       xs: '14px',
       sm: '16px',
       md: '18px',
-      lg: '20px',
+      lg: '24px',
       xl: '34px',
     },
   },
@@ -62,9 +62,29 @@ export default {
       contrastText: '#ffffff',
     },
 
-    success: '#52c41a',
-    warning: '#fadb14',
-    info: '#1890ff',
+    success: {
+      lighter: '#d9f7be',
+      light: '#b7eb8f',
+      semi: '#73d13d',
+      main: '#52c41a',
+      dark: '#389e0d',
+    },
+
+    warning: {
+      lighter: '#ffffb8',
+      light: '#fffb8f',
+      semi: '#ffec3d',
+      main: '#fadb14',
+      dark: '#d4b106',
+    },
+
+    info: {
+      lighter: '#bae7ff',
+      light: '#91d5ff',
+      semi: '#40a9ff',
+      main: '#1890ff',
+      dark: '#096dd9',
+    },
 
     grey: {
       50: '#fafafa',

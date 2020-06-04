@@ -9,6 +9,7 @@ import { SET_IS_DESKTOP } from 'store/ui'
 import { firebase, getUsersProfile } from 'utils/firebase'
 import theme from 'theme'
 
+import { Background } from 'components/Layout'
 import AuthLayout from 'pages/Auth'
 import { GlobalStyle } from './GlobalStyles'
 import ScrollToTop from './ScrollToTop'
@@ -30,6 +31,7 @@ const App = () => {
         dispatch({ type: SET_AUTH_USER, payload: { user: getUsersProfile(authUser) } })
       } else {
         // User is signed out.
+        window.localStorage.removeItem('accessToken')
         dispatch({ type: CLEAR_AUTH_USER })
       }
     })
@@ -52,11 +54,10 @@ const App = () => {
   return (
     <Router>
       <GlobalStyle />
+      <Background />
 
       <ScrollToTop>
-        <Switch>
-          {auth?.user ? <Route exact render={() => <AppLayout />} /> : <Route exact render={() => <AuthLayout />} />}
-        </Switch>
+        <Switch>{auth?.user ? <Route exact component={AppLayout} /> : <Route exact component={AuthLayout} />}</Switch>
       </ScrollToTop>
     </Router>
   )

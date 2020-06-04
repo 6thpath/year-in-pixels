@@ -7,22 +7,20 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { useStore } from 'store'
 import { SET_GLOBAL_MESSAGE } from 'store/ui'
 import { firebase } from 'utils/firebase'
-import { emailRegex } from 'utils/regex'
+import { emailRegex, normalPasswordRegex } from 'utils/regex'
 import * as Routes from 'routes'
 
 import { Button, ButtonLink } from 'components/Button'
-import { Hr } from 'components/Text'
 import Tooltip from 'components/Tooltip'
 
-import FacebookSignIn from './FacebookSignIn'
-import GoogleSignIn from './GoogleSignIn'
+import PasswordTooltip from './PasswordTooltip'
 
 const Form = styled.form`
   width: 100%;
   position: absolute;
   display: flex;
   flex-direction: column;
-  padding: 0 ${(p) => p.theme.spacing.xs};
+  padding: ${(p) => p.theme.spacing.xs};
 `
 
 const FormItem = styled.div`
@@ -41,8 +39,18 @@ const FocusBorder = styled.span`
   height: 2px;
   background: linear-gradient(
     to right,
-    ${(p) => (p.hasError ? p.theme.colors.error.lighter : p.theme.colors.primary.lighter)},
-    ${(p) => (p.hasError ? p.theme.colors.error.main : p.theme.colors.primary.main)}
+    ${(p) =>
+      p.hasError || p.strength === 0
+        ? p.theme.colors.error.lighter
+        : p.strength === 1
+        ? p.theme.colors.warning.lighter
+        : p.theme.colors.success.lighter},
+    ${(p) =>
+      p.hasError || p.strength === 0
+        ? p.theme.colors.error.main
+        : p.strength === 1
+        ? p.theme.colors.warning.main
+        : p.theme.colors.success.main}
   );
   transition: all 0.4s;
   margin-bottom: ${(p) => p.theme.spacing.md};
@@ -77,7 +85,7 @@ const Input = styled.input`
   & ~ #${(p) => p.labelId} {
     position: absolute;
     left: 0;
-    top: ${(p) => (p.value ? '-20px' : 0)};
+    top: ${(p) => (p.value ? '-16px' : 0)};
     font-size: ${(p) => (p.value ? p.theme.font.size.xxs : p.theme.font.size.xs)};
     color: ${(p) => (p.value ? p.theme.colors.primary.dark : p.theme.colors.grey[400])};
     transition: 0.3s;
@@ -85,7 +93,7 @@ const Input = styled.input`
   }
 
   &:focus ~ #${(p) => p.labelId} {
-    top: -20px;
+    top: -16px;
     font-size: ${(p) => p.theme.font.size.xxs};
     color: ${(p) => p.theme.colors.primary.dark};
     transition: 0.3s;
@@ -97,105 +105,133 @@ const Input = styled.input`
   }
 `
 
-const ButtonsGroup = styled.div`
-  width: 100%;
-
-  display: inline-grid;
-  grid-template-columns: auto auto;
-  grid-column: 2;
-  grid-column-gap: 10px;
-`
-
-const SignInForm = ({ history, style }) => {
+const SignUpForm = ({ history, style }) => {
   // eslint-disable-next-line no-unused-vars
   const [store, dispatch] = useStore()
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [emailHasError, setEmailHasError] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordStrength, setPasswordStrength] = useState(0)
   const [passwordHasError, setPasswordHasError] = useState('')
+  const [cPassword, setCPassword] = useState('')
+  const [cPasswordHasError, setCPasswordHasError] = useState('')
 
   const emailRef = useRef(null)
   const passwordRef = useRef(null)
+  const cPasswordRef = useRef(null)
 
   const handleReset = () => {
     setLoading(false)
     setEmail('')
     setEmailHasError('')
     setPassword('')
+    setPasswordStrength(0)
     setPasswordHasError('')
+    setCPassword('')
+    setCPasswordHasError('')
   }
 
-  // Reset state on willUnmount
+  // Reset fields on willUnmount
   useEffect(() => () => handleReset(), [])
 
-  // Email
+  // Email field
   const onEmailChange = ({ target: { value } }) => {
     setEmail(value)
 
     if (value && !emailRegex.test(value)) {
       setEmailHasError('Please input a valid email address')
-    } else if (emailHasError) setEmailHasError('')
+    } else setEmailHasError('')
   }
 
   const onEmailBlur = () => {
     if (emailHasError) setEmailHasError('')
   }
 
-  // Password
+  // Password field
   const onPasswordChange = ({ target: { value } }) => {
     setPassword(value)
 
-    if (passwordHasError) setPasswordHasError('')
+    const isPasswordValid = normalPasswordRegex.test(value)
+
+    if (value.length < 6) {
+      setPasswordHasError('Password must be at least 6 characters in length')
+    } else if (!isPasswordValid) {
+      setPasswordHasError('Password must be a combination of letters and digits')
+    } else setPasswordHasError('')
+
+    if (value.length < 6 || !isPasswordValid) setPasswordStrength(0)
+    else if (value.length <= 6 && isPasswordValid) setPasswordStrength(1)
+    else if (value.length > 9 && isPasswordValid) setPasswordStrength(2)
   }
 
   const onPasswordBlur = () => {
     if (passwordHasError) setPasswordHasError('')
   }
 
+  // Confirm password field
+  const onCPasswordChange = ({ target: { value } }) => {
+    setCPassword(value)
+
+    if (value !== password) setCPasswordHasError('The two passwords that you entered do not match')
+    else setCPasswordHasError('')
+  }
+
+  const onCPasswordBlur = () => {
+    if (cPasswordHasError) setCPasswordHasError('')
+  }
+
   // Submit
   const onSubmit = (e) => {
     e.preventDefault()
 
-    if (!email || !emailRegex.test(email)) {
+    const isEmailValid = emailRegex.test(email)
+    const isPasswordValid = normalPasswordRegex.test(password)
+
+    if (!email || !isEmailValid) {
       if (!email) {
         setEmailHasError('Email is required')
       } else {
         setEmailHasError('Please input a valid email address')
       }
+
       return emailRef.current.focus()
     }
 
-    if (!password) {
-      setPasswordHasError('Password is required')
+    if (!password || password.length < 6 || !isPasswordValid) {
+      if (!password) {
+        setPasswordHasError('Password is required')
+      } else if (password.length < 6) {
+        setPasswordHasError('Password must be at least 6 characters in length')
+      } else {
+        setPasswordHasError('Password must be a combination of letters and digits')
+      }
+
       return passwordRef.current.focus()
     }
 
-    dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Signing in...' })
+    if (!cPassword || cPassword !== password) {
+      if (!password) {
+        setCPasswordHasError('Confirm password is required')
+      } else {
+        setCPasswordHasError('The two passwords that you entered do not match')
+      }
+
+      return cPasswordRef.current.focus()
+    }
+
+    dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Creating new account...' })
     setLoading(true)
 
     return firebase
       .auth()
-      .signInWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        history.push(Routes.HOME)
+      })
       .catch((error) => {
-        switch (error.code) {
-          case 'auth/user-not-found': {
-            setEmailHasError(error.message)
-            emailRef.current.focus()
-            break
-          }
-
-          case 'auth/wrong-password': {
-            setPasswordHasError(error.message)
-            passwordRef.current.focus()
-            break
-          }
-
-          default: {
-            setEmailHasError(error.message)
-            emailRef.current.focus()
-          }
-        }
+        setEmailHasError(error.message)
+        emailRef.current.focus()
       })
       .finally(() => {
         dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' })
@@ -203,8 +239,8 @@ const SignInForm = ({ history, style }) => {
       })
   }
 
-  const toSignUp = () => {
-    history.push(Routes.SIGN_UP)
+  const toSignIn = () => {
+    history.push(Routes.HOME)
   }
 
   return (
@@ -217,11 +253,11 @@ const SignInForm = ({ history, style }) => {
               onChange={onEmailChange}
               value={email}
               onBlur={onEmailBlur}
-              labelId='email-label'
-              borderId='email-border'
+              labelId='reg-email-label'
+              borderId='reg-email-border'
             />
-            <Label id='email-label'>Email</Label>
-            <FocusBorder id='email-border' hasText={!!email.length} hasError={!!emailHasError} />
+            <Label id='reg-email-label'>Email</Label>
+            <FocusBorder id='reg-email-border' hasText={!!email.length} hasError={!!emailHasError} />
           </FormItem>
         </Tooltip>
 
@@ -235,11 +271,28 @@ const SignInForm = ({ history, style }) => {
               value={password}
               onBlur={onPasswordBlur}
               type='password'
-              labelId='password-label'
-              borderId='password-border'
+              labelId='reg-password-label'
+              borderId='reg-password-border'
             />
-            <Label id='password-label'>Password</Label>
-            <FocusBorder hasText={!!password.length} hasError={!!passwordHasError} id='password-border' />
+            <Label id='reg-password-label'>Password</Label>
+            <FocusBorder id='reg-password-border' hasText={!!password.length} strength={passwordStrength} />
+            <PasswordTooltip />
+          </FormItem>
+        </Tooltip>
+
+        <Tooltip visible={!!cPasswordHasError} title={cPasswordHasError}>
+          <FormItem>
+            <Input
+              ref={cPasswordRef}
+              onChange={onCPasswordChange}
+              value={cPassword}
+              onBlur={onCPasswordBlur}
+              type='password'
+              labelId='cPassword-label'
+              borderId='cPassword-border'
+            />
+            <Label id='cPassword-label'>Confirm Password</Label>
+            <FocusBorder id='cPassword-border' hasText={!!cPassword.length} hasError={!!cPasswordHasError} />
           </FormItem>
         </Tooltip>
 
@@ -248,22 +301,15 @@ const SignInForm = ({ history, style }) => {
           // disabled={!email || !password || emailHasError || passwordHasError}
           disabled={loading}
         >
-          {loading ? <LoadingOutlined /> : 'SIGN IN TO YOUR ACCOUNT'}
+          {loading ? <LoadingOutlined /> : 'SIGN UP NEW ACCOUNT'}
         </Button>
 
-        <ButtonLink type='button' onClick={toSignUp}>
-          SIGN UP
+        <ButtonLink type='button' onClick={toSignIn}>
+          ALREADY HAVE AN ACCOUNT?
         </ButtonLink>
-
-        <Hr content='Or sign in with social account' />
-
-        <ButtonsGroup>
-          <FacebookSignIn />
-          <GoogleSignIn />
-        </ButtonsGroup>
       </Form>
     </animated.div>
   )
 }
 
-export default withRouter(SignInForm)
+export default withRouter(SignUpForm)
