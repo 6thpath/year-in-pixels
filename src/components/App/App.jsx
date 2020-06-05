@@ -6,11 +6,10 @@ import { useWindowSize } from 'hooks/useWindowSize'
 import { useStore } from 'store'
 import { SET_AUTH_USER, CLEAR_AUTH_USER } from 'store/auth'
 import { CLEAR_DATA } from 'store/data'
-import { SET_IS_DESKTOP } from 'store/ui'
+import { SET_IS_MOBILE } from 'store/ui'
 import { firebase, getUsersProfile } from 'utils/firebase'
 import theme from 'theme'
 
-import { Background } from 'components/Layout'
 import AuthLayout from 'pages/Auth'
 import { GlobalStyle } from './GlobalStyles'
 import ScrollToTop from './ScrollToTop'
@@ -20,11 +19,11 @@ const App = () => {
   const [{ auth, ui }, dispatch] = useStore()
 
   const windowSize = useWindowSize()
-  const isDesktop = windowSize.width >= parseInt(theme.screen.md, 10)
+  const isMobile = windowSize.width <= parseInt(theme.screen.sm, 10)
 
   useEffect(() => {
-    dispatch({ type: SET_IS_DESKTOP, payload: isDesktop })
-  }, [dispatch, isDesktop])
+    dispatch({ type: SET_IS_MOBILE, payload: isMobile })
+  }, [dispatch, isMobile])
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((authUser) => {
@@ -56,7 +55,6 @@ const App = () => {
   return (
     <Router>
       <GlobalStyle />
-      <Background />
 
       <ScrollToTop>
         <Switch>{auth?.user ? <Route exact component={AppLayout} /> : <Route exact component={AuthLayout} />}</Switch>

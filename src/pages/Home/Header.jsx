@@ -13,7 +13,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
 
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   padding: 0 ${(p) => p.theme.spacing.md};

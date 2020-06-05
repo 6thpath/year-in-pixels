@@ -9,26 +9,22 @@ import NotFound from 'components/NotFound'
 import Home from 'pages/Home'
 import ScrollToTop from './ScrollToTop'
 
+import SideMenu from 'pages/Home/SideMenu'
+
 const Root = styled.div`
   display: flex;
   flex-direction: row;
   margin: 0 auto;
   width: 100%;
   height: 100%;
-  position: relative;
-
-  @media (min-width: ${(p) => p.theme.screen.md}) {
-    width: ${(p) => p.theme.screen.md};
-  }
-
-  @media (min-width: ${(p) => parseInt(p.theme.screen.lg, 10) + 20 + 'px'}) {
-    width: ${(p) => p.theme.screen.lg};
-  }
+  position: absolute;
 `
 
 const AppLayout = () => {
   return (
     <>
+      <SideMenu />
+
       <Root>
         <ScrollToTop>
           <Switch>

@@ -23,8 +23,6 @@ const RightHeader = () => {
     dispatch({ type: SET_DATETIME, payload: date })
   }
 
-  console.log(data.selectedDate)
-
   return (
     <>
       <Select value={data.displayType} style={{ width: 90 }} onChange={onDisplayTypeChange}>

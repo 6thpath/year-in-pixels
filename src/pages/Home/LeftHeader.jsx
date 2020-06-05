@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Menu, Dropdown, Badge, Tooltip } from 'antd'
-import { MailOutlined, LogoutOutlined } from '@ant-design/icons'
+import { MailOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
 import { useCountdown } from 'hooks/useCountdown'
 import { useStore } from 'store'
-import { SET_GLOBAL_MESSAGE } from 'store/ui'
+import { SET_GLOBAL_MESSAGE, SET_SIDEMENU_STATE } from 'store/ui'
 import { firebase, signOut } from 'utils/firebase'
 
 import Avatar from 'components/Avatar'
@@ -26,7 +26,7 @@ const Username = styled.span`
 `
 
 const LeftHeader = () => {
-  const [{ auth }, dispatch] = useStore()
+  const [{ auth, ui }, dispatch] = useStore()
   const [RVEdisabled, setRVEDisabled] = useState(false)
 
   const onTimerFinish = () => {
@@ -59,6 +59,16 @@ const LeftHeader = () => {
 
       default:
     }
+  }
+
+  const onToggleSideMenu = (boolean) => {
+    dispatch({ type: SET_SIDEMENU_STATE, payload: boolean })
+  }
+
+  if (ui.isMobile) {
+    if (ui.isSideMenuOpen)
+      return <MenuUnfoldOutlined style={{ fontSize: 21 }} onClick={() => onToggleSideMenu(false)} />
+    return <MenuFoldOutlined style={{ fontSize: 21 }} onClick={() => onToggleSideMenu(true)} />
   }
 
   return (

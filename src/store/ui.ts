@@ -1,15 +1,17 @@
 /**
  * Actions types
  */
-export const SET_IS_DESKTOP = 'SET_IS_DESKTOP'
+export const SET_IS_MOBILE = 'SET_IS_MOBILE'
 export const SET_GLOBAL_MESSAGE = 'SET_GLOBAL_MESSAGE'
+export const SET_SIDEMENU_STATE = 'SET_SIDEMENU_STATE'
 
 /**
  * Initial State
  */
 export const uiInitialState = {
-  isDesktop: false,
+  isMobile: false,
   globalMessage: '',
+  isSideMenuOpen: false,
 }
 
 interface IAction {
@@ -22,10 +24,10 @@ interface IAction {
  */
 export const uiReducer = (state = uiInitialState, action: IAction) => {
   switch (action.type) {
-    case SET_IS_DESKTOP: {
+    case SET_IS_MOBILE: {
       return {
         ...state,
-        isDesktop: action.payload,
+        isMobile: action.payload,
       }
     }
 
@@ -33,6 +35,13 @@ export const uiReducer = (state = uiInitialState, action: IAction) => {
       return {
         ...state,
         globalMessage: action.payload,
+      }
+    }
+
+    case SET_SIDEMENU_STATE: {
+      return {
+        ...state,
+        isSideMenuOpen: action.payload,
       }
     }
 

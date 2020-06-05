@@ -27,13 +27,13 @@ import * as serviceWorker from './serviceWorker'
 initFirebase()
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <StoreProvider>
+  <StoreProvider>
+    <ThemeProvider theme={theme}>
       <HelmetProvider>
         <App />
       </HelmetProvider>
-    </StoreProvider>
-  </ThemeProvider>,
+    </ThemeProvider>
+  </StoreProvider>,
   document.getElementById('root')
 )
 
