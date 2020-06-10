@@ -64,7 +64,7 @@ const Cell = styled.div`
     &:after {
       content: ${p.isMobile ? `'x'` : `'today'`};
       letter-spacing: 2px;
-      color: ${p.theme.colors.white};
+      color: ${p.background !== 'rgba(255, 255, 255, .35)' ? p.theme.colors.white : p.theme.colors.black};
       mix-blend-mode: hard-light;
     }
 
