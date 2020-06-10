@@ -63,7 +63,7 @@ const LeftHeader = () => {
     setUsername(e.target.value)
   }
 
-  const onBlur = () => {
+  const updateUsername = () => {
     firebase
       .auth()
       .currentUser.updateProfile({
@@ -83,6 +83,11 @@ const LeftHeader = () => {
         dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } })
       })
       .finally(() => setIsEditing(false))
+  }
+
+  const onBlur = () => {
+    setUsername(auth.user.name || '')
+    setIsEditing(false)
   }
 
   const onTimerFinish = () => {
@@ -189,6 +194,8 @@ const LeftHeader = () => {
           onKeyDown={(e) => {
             if (e.keyCode === 13 && !e.shiftKey) {
               e.preventDefault()
+              updateUsername()
+            } else if (e.key === 'Escape') {
               onBlur()
             }
           }}
