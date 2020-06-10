@@ -68,23 +68,19 @@ const Selection = () => {
   }
 
   const onSelect = (emt) => {
-    db.collection('pixels')
-      .doc(auth.user.uid)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          db.collection('pixels')
-            .doc(auth.user.uid)
-            .update({ [data.todayKey]: emt })
-        } else {
-          // doc.data() will be undefined in this case
-          db.collection('pixels')
-            .doc(auth.user.uid)
-            .set({ [data.todayKey]: emt })
-        }
-      })
-      .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: error.message }))
-      .finally(onCloseModal)
+    if (Object.keys(data.data).length) {
+      db.collection('pixels')
+        .doc(auth.user.uid)
+        .update({ [data.todayKey]: emt })
+        .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
+        .finally(onCloseModal)
+    } else {
+      db.collection('pixels')
+        .doc(auth.user.uid)
+        .set({ [data.todayKey]: emt })
+        .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
+        .finally(onCloseModal)
+    }
   }
 
   return (

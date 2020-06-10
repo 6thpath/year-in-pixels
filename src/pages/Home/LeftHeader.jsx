@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Menu, Dropdown, Badge, Button, Tooltip } from 'antd'
+import { Menu, Dropdown, Badge, Button, Tooltip, Input } from 'antd'
 import { MailOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
 import { useCountdown } from 'hooks/useCountdown'
 import { useStore } from 'store'
+import { SET_AUTH_USER } from 'store/auth'
 import { SET_GLOBAL_MESSAGE, SET_SIDEMENU_STATE } from 'store/ui'
-import { firebase, signOut } from 'utils/firebase'
+import { firebase, signOut, getUsersProfile } from 'utils/firebase'
 
 import Avatar from 'components/Avatar'
 import { NonSelectableText } from 'components/Text'
@@ -21,10 +22,16 @@ const DropdownButton = styled.div`
   }
 `
 
-const Username = styled(NonSelectableText)`
+const StyledInput = styled(Input)`
+  width: 300px;
+  margin-left: ${(p) => p.theme.spacing.xxs};
+`
+
+const Username = styled.span`
+  user-select: none;
   border-radius: ${(p) => p.theme.radius.md};
   padding: ${(p) => p.theme.spacing.xxs};
-  margin-left: ${(p) => p.theme.spacing.xs};
+  margin-left: ${(p) => p.theme.spacing.xxs};
   transition: all 0.4s;
 
   &:hover {
@@ -49,6 +56,35 @@ const LeftHeader = () => {
   const [{ auth, ui }, dispatch] = useStore()
   const [RVEdisabled, setRVEDisabled] = useState(false)
 
+  const [isEditing, setIsEditing] = useState(false)
+  const [username, setUsername] = useState(auth.user.name || '')
+
+  const onChangeUsername = (e) => {
+    setUsername(e.target.value)
+  }
+
+  const onBlur = () => {
+    firebase
+      .auth()
+      .currentUser.updateProfile({
+        displayName: username,
+      })
+      .then(() => {
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Username updated successfully', type: 'success' } })
+        firebase
+          .auth()
+          .currentUser.reload()
+          .then(() => {
+            const refreshUser = firebase.auth().currentUser
+            dispatch({ type: SET_AUTH_USER, payload: { user: getUsersProfile(refreshUser) } })
+          })
+      })
+      .catch((error) => {
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } })
+      })
+      .finally(() => setIsEditing(false))
+  }
+
   const onTimerFinish = () => {
     setRVEDisabled(false)
   }
@@ -56,7 +92,7 @@ const LeftHeader = () => {
   const countdown = useCountdown({ seconds: 60, onFinish: onTimerFinish })
 
   const onSignOut = () => {
-    signOut((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: error.message }))
+    signOut((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
   }
 
   const onMenuClick = ({ key }) => {
@@ -67,8 +103,10 @@ const LeftHeader = () => {
         firebase
           .auth()
           .currentUser.sendEmailVerification()
-          .then(() => dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Verification email sent!' }))
-          .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: error.message }))
+          .then(() =>
+            dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Verification email sent!', type: 'success' } })
+          )
+          .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
         break
       }
 
@@ -142,7 +180,23 @@ const LeftHeader = () => {
         </DropdownButton>
       </Dropdown>
 
-      <Username>Hi, {auth.user.name || auth.user.email}!</Username>
+      {isEditing ? (
+        <StyledInput
+          autoFocus
+          placeholder='Input your display name'
+          value={username}
+          onChange={onChangeUsername}
+          onKeyDown={(e) => {
+            if (e.keyCode === 13 && !e.shiftKey) {
+              e.preventDefault()
+              onBlur()
+            }
+          }}
+          onBlur={onBlur}
+        />
+      ) : (
+        <Username onClick={() => setIsEditing(true)}>Hi, {auth.user.name || auth.user.email}!</Username>
+      )}
     </>
   )
 }

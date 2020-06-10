@@ -17,7 +17,7 @@ const GoogleSignIn = () => {
   const [error, setError] = useState('')
 
   const signInWithGoogle = () => {
-    dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Signing in...' })
+    dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Signing in...', type: 'loading' } })
     setLoading(true)
 
     return firebase
@@ -77,7 +77,7 @@ const GoogleSignIn = () => {
         }
       })
       .finally(() => {
-        dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' })
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: '', type: '' } })
         setLoading(false)
       })
   }

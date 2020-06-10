@@ -71,8 +71,10 @@ const SideBar = () => {
     return firebase
       .auth()
       .currentUser.sendEmailVerification()
-      .then(() => dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Verification email sent!' }))
-      .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: error.message }))
+      .then(() =>
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Verification email sent!', type: 'success' } })
+      )
+      .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
   }
 
   return (

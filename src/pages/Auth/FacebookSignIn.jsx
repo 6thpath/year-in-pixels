@@ -17,7 +17,7 @@ const FacebookSignIn = () => {
   const [error, setError] = useState('')
 
   const signInWithFacebook = () => {
-    dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Signing in...' })
+    dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Signing in...', type: 'loading' } })
     setLoading(true)
 
     firebase
@@ -77,7 +77,7 @@ const FacebookSignIn = () => {
         }
       })
       .finally(() => {
-        dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' })
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: '', type: '' } })
         setLoading(false)
       })
   }

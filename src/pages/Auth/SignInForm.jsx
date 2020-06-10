@@ -171,7 +171,7 @@ const SignInForm = ({ history, style }) => {
       return passwordRef.current.focus()
     }
 
-    dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Signing in...' })
+    dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Signing in...', type: 'loading' } })
     setLoading(true)
 
     return firebase
@@ -198,7 +198,7 @@ const SignInForm = ({ history, style }) => {
         }
       })
       .finally(() => {
-        dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' })
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: '', type: '' } })
         setLoading(false)
       })
   }

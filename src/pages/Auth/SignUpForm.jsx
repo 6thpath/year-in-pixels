@@ -220,14 +220,17 @@ const SignUpForm = ({ history, style }) => {
       return cPasswordRef.current.focus()
     }
 
-    dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Creating new account...' })
+    dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Creating new account...', type: 'loading' } })
     setLoading(true)
 
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => {
-        dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Account created successfully, signing in...' })
+        dispatch({
+          type: SET_GLOBAL_MESSAGE,
+          payload: { message: 'Account created successfully', type: 'success' },
+        })
         history.push(Routes.HOME)
       })
       .catch((error) => {
@@ -235,7 +238,6 @@ const SignUpForm = ({ history, style }) => {
         emailRef.current.focus()
       })
       .finally(() => {
-        dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' })
         setLoading(false)
       })
   }

@@ -46,8 +46,12 @@ const App = () => {
   useEffect(() => {
     let hideFunction
 
-    if (ui.globalMessage) {
-      hideFunction = message.loading(ui.globalMessage, 3, () => dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' }))
+    if (ui.globalMessage && ui.globalMessageType) {
+      const duration = ui.globalMessageType === 'success' ? 2 : ui.globalMessageType === 'error' ? 4 : 3
+
+      hideFunction = message[ui.globalMessageType](ui.globalMessage, duration, () =>
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: '', type: '' } })
+      )
     } else if (typeof hideFunction === 'function' && !ui.globalMessage) {
       hideFunction()
     }
@@ -55,7 +59,7 @@ const App = () => {
     return () => {
       if (typeof hideFunction === 'function') hideFunction()
     }
-  }, [ui.globalMessage, dispatch])
+  }, [dispatch, ui.globalMessage, ui.globalMessageType])
 
   if (loading) return <Loading />
 

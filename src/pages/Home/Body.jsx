@@ -54,17 +54,25 @@ const Cell = styled.div`
   border-width: 0 0 1px 0;
   background: ${(p) =>
     p.header ? p.theme.colors.primary.lighter : p.type === 'nodate' ? p.theme.colors.emotion.nodate : p.background};
-  transition: all 0.4s;
+  transition: all 0.4s, border 0s, border-radius 0s;
   ${(p) => p.header && 'cursor: pointer;'}
   ${(p) =>
     p.today &&
     `
-  box-shadow: 0 0 4px 2px ${p.theme.colors.primary.main} inset;
   cursor: pointer;
-  transform: scale(1.1);
+
+    &:after {
+      content: ${p.isMobile ? `'x'` : `'today'`};
+      letter-spacing: 2px;
+      color: ${p.theme.colors.white};
+      mix-blend-mode: hard-light;
+    }
 
   &:hover {
     transform: scale(1.3);
+    border-bottom-width: 0;
+    border-radius: ${p.theme.radius.sm};
+    box-shadow: 0 0 30px 2px ${p.theme.colors.primary.main};
   }
 `}
 
@@ -84,7 +92,7 @@ const Cell = styled.div`
 const getColor = (emt) => theme.colors.emotion[emt] || 'rgba(255, 255, 255, .35)'
 
 const Body = () => {
-  const [{ auth, data }, dispatch] = useStore()
+  const [{ auth, data, ui }, dispatch] = useStore()
   const [dates, setDates] = useState({})
 
   const transitions = useTransition(data.selectedYear, null, {
@@ -94,11 +102,16 @@ const Body = () => {
   })
 
   useEffect(() => {
-    db.collection(PIXELS)
-      .doc(auth.user.uid)
-      .onSnapshot((doc) => {
-        dispatch({ type: SET_DATA, payload: doc.data() })
-      })
+    if (auth.user.uid) {
+      const unsubscribe = db
+        .collection(PIXELS)
+        .doc(auth.user.uid)
+        .onSnapshot((doc) => {
+          if (doc.exists) dispatch({ type: SET_DATA, payload: doc.data() })
+        })
+
+      return () => unsubscribe()
+    }
   }, [auth.user.uid, dispatch])
 
   useEffect(() => {
@@ -173,8 +186,11 @@ const Body = () => {
                   return (
                     <Cell
                       key={_index}
-                      today={dates[month].dates[day].key === data.todayKey}
-                      {...(dates[month].dates[day].key === data.todayKey && { onClick: openSelection })}
+                      {...(dates[month].dates[day].key === data.todayKey && {
+                        isMobile: ui.isMobile,
+                        today: true,
+                        onClick: openSelection,
+                      })}
                       background={dates[month].dates[day].status}
                     />
                   )

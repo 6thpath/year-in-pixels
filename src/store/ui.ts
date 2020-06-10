@@ -13,6 +13,7 @@ export const RESET_UI_STORE = 'RESET_UI_STORE'
 export const uiInitialState = {
   isMobile: false,
   globalMessage: '',
+  globalMessageType: '',
   isSideMenuOpen: false,
   isSltVisible: false,
 }
@@ -37,7 +38,8 @@ export const uiReducer = (state = uiInitialState, action: IAction) => {
     case SET_GLOBAL_MESSAGE: {
       return {
         ...state,
-        globalMessage: action.payload,
+        globalMessage: action.payload.message,
+        globalMessageType: action.payload.type,
       }
     }
 
