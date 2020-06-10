@@ -4,6 +4,8 @@
 export const SET_IS_MOBILE = 'SET_IS_MOBILE'
 export const SET_GLOBAL_MESSAGE = 'SET_GLOBAL_MESSAGE'
 export const SET_SIDEMENU_STATE = 'SET_SIDEMENU_STATE'
+export const SET_SELECTIONS_VISIBILITY = 'SET_SELECTIONS_VISIBILITY'
+export const RESET_UI_STORE = 'RESET_UI_STORE'
 
 /**
  * Initial State
@@ -12,6 +14,7 @@ export const uiInitialState = {
   isMobile: false,
   globalMessage: '',
   isSideMenuOpen: false,
+  isSltVisible: false,
 }
 
 interface IAction {
@@ -42,6 +45,22 @@ export const uiReducer = (state = uiInitialState, action: IAction) => {
       return {
         ...state,
         isSideMenuOpen: action.payload,
+      }
+    }
+
+    case SET_SELECTIONS_VISIBILITY: {
+      return {
+        ...state,
+        isSltVisible: action.payload,
+      }
+    }
+
+    case RESET_UI_STORE: {
+      const { isMobile, ...rest } = uiInitialState
+
+      return {
+        ...state,
+        ...rest,
       }
     }
 

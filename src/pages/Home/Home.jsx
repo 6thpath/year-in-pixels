@@ -5,6 +5,9 @@ import { useStore } from 'store'
 
 import HtmlHeader from 'components/HtmlHeader'
 import Header from './Header'
+import Emotions from './Emotions'
+import Selection from './Selection'
+import Body from './Body'
 
 const Container = styled.div`
   width: 100%;
@@ -12,7 +15,7 @@ const Container = styled.div`
 
 const Home = () => {
   // eslint-disable-next-line no-unused-vars
-  const [{ auth }] = useStore()
+  const [{ auth, data }] = useStore()
 
   const username = auth.user.name ? `${auth.user.name} | ` : ''
 
@@ -20,6 +23,11 @@ const Home = () => {
     <Container id='styled-home-container'>
       <HtmlHeader title={`${username}Year In Pixels`} />
       <Header />
+
+      {data.selectedYear && <Emotions />}
+      <Selection />
+
+      <Body />
     </Container>
   )
 }

@@ -13,7 +13,7 @@ const facebookProvider = new firebase.auth.FacebookAuthProvider()
 
 export { firebase, googleProvider, facebookProvider }
 
-export function initFirebase() {
+function initFirebase() {
   const firebaseConfig = {
     apiKey: 'AIzaSyBITUXkz-otukn4Jpzke4ANwGHooyfgGFw',
     authDomain: 'year-in-pixels-af189.firebaseapp.com',
@@ -28,6 +28,10 @@ export function initFirebase() {
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig)
 }
+
+initFirebase()
+
+export const db = firebase.firestore()
 
 export function getUsersProfile(user) {
   return {

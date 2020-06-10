@@ -10,15 +10,22 @@ import HtmlHeader from 'components/HtmlHeader'
 import SignInForm from './SignInForm'
 import SignUpForm from './SignUpForm'
 
+import background from 'assets/images/background.png'
+
 const Container = styled.div`
   width: 100%;
-  margin-top: 150px;
+  height: 100vh;
   position: absolute;
 
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+  background-image: url(${background});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 `
 
 const FormContainer = styled.div`

@@ -18,13 +18,11 @@ import { StoreProvider } from 'store'
 import { HelmetProvider } from 'react-helmet-async'
 
 // Firebase
-import { initFirebase } from 'utils/firebase'
+import 'utils/firebase'
 
 import App from './components/App'
 
 import * as serviceWorker from './serviceWorker'
-
-initFirebase()
 
 ReactDOM.render(
   <StoreProvider>

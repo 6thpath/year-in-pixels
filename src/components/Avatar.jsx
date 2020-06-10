@@ -8,8 +8,8 @@ const StyledAvatar = styled(AntdAvatar)`
   user-select: none;
 `
 
-const Avatar = ({ photoUrl, name, email }) => {
-  const avatarSize = 32
+const Avatar = ({ size, photoUrl, name, email }) => {
+  const avatarSize = size || 32
 
   if (photoUrl) {
     return <StyledAvatar size={avatarSize} src={photoUrl} />
@@ -35,6 +35,7 @@ const AvatarWithBadge = ({ badge = 0, ...rest }) => {
 }
 
 const avatarPropTypes = {
+  size: PropTypes.number,
   photoUrl: PropTypes.string,
   name: PropTypes.string,
   email: PropTypes.string,

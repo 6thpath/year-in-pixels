@@ -16,6 +16,7 @@ const Container = styled.div`
   position: sticky;
   top: 0;
   left: 0;
+  z-index: ${(p) => p.theme.zIndex.md};
   padding: 0 ${(p) => p.theme.spacing.md};
   background: ${(p) => p.theme.colors.white};
   box-shadow: 0 4px 4px -2px ${(p) => p.theme.colors.grey[700]};

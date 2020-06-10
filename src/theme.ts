@@ -31,6 +31,21 @@ export default {
     body: '#f7f7f7',
     black: '#000000',
     white: '#ffffff',
+    purple: '#531dab',
+
+    emotion: {
+      amazing: '#ff4d4f',
+      excited: '#ff85c0',
+      energetic: '#fadb14',
+      good: '#95de64',
+      normal: '#ffc069',
+      nervous: '#237804',
+      frustrated: '#820014',
+      exhausted: '#873800',
+      bored: '#bfbfbf',
+      sad: '#391085',
+      nodate: 'transparent',
+    },
 
     primary: {
       lighter: '#f4eeff',

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { message } from 'antd'
 
@@ -6,16 +6,18 @@ import { useWindowSize } from 'hooks/useWindowSize'
 import { useStore } from 'store'
 import { SET_AUTH_USER, CLEAR_AUTH_USER } from 'store/auth'
 import { CLEAR_DATA } from 'store/data'
-import { SET_IS_MOBILE } from 'store/ui'
+import { SET_IS_MOBILE, SET_GLOBAL_MESSAGE, RESET_UI_STORE } from 'store/ui'
 import { firebase, getUsersProfile } from 'utils/firebase'
 import theme from 'theme'
 
+import Loading from './Loading'
 import AuthLayout from 'pages/Auth'
 import { GlobalStyle } from './GlobalStyles'
 import ScrollToTop from './ScrollToTop'
 import AppLayout from './AppLayout'
 
 const App = () => {
+  const [loading, setLoading] = useState(true)
   const [{ auth, ui }, dispatch] = useStore()
 
   const windowSize = useWindowSize()
@@ -34,7 +36,10 @@ const App = () => {
         window.localStorage.removeItem('accessToken')
         dispatch({ type: CLEAR_AUTH_USER })
         dispatch({ type: CLEAR_DATA })
+        dispatch({ type: RESET_UI_STORE })
       }
+
+      setLoading(false)
     })
   }, [dispatch])
 
@@ -42,15 +47,17 @@ const App = () => {
     let hideFunction
 
     if (ui.globalMessage) {
-      hideFunction = message.loading(ui.globalMessage, 0)
-    } else if (typeof hideFunction === 'function') {
+      hideFunction = message.loading(ui.globalMessage, 3, () => dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' }))
+    } else if (typeof hideFunction === 'function' && !ui.globalMessage) {
       hideFunction()
     }
 
     return () => {
       if (typeof hideFunction === 'function') hideFunction()
     }
-  }, [ui.globalMessage])
+  }, [ui.globalMessage, dispatch])
+
+  if (loading) return <Loading />
 
   return (
     <Router>

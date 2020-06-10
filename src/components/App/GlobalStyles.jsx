@@ -1,7 +1,5 @@
 import { createGlobalStyle, css } from 'styled-components'
 
-import background from 'assets/images/background.png'
-
 import theme from 'theme'
 
 const Scroll = css`
@@ -50,24 +48,6 @@ export const GlobalStyle = createGlobalStyle`
   body {
     font-family: ${theme.font.family};
     color: ${theme.colors.text.primary};
-    ${'' /* background-color: ${theme.colors.body}; */}
-
-
-    &::after {
-      background-image: url(${background});
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-
-      content: "";
-      opacity: 0.5;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      right: 0;
-      left: 0;
-      z-index: -1;
-    }
 
     &::-webkit-scrollbar {
       display: none;
@@ -76,5 +56,6 @@ export const GlobalStyle = createGlobalStyle`
 
   #root {
     min-height: 100%;
+    position: relative;
   }
 `

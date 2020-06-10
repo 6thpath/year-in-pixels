@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Menu, Dropdown, Badge, Tooltip } from 'antd'
+import { Menu, Dropdown, Badge, Button, Tooltip } from 'antd'
 import { MailOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
 import { useCountdown } from 'hooks/useCountdown'
@@ -21,9 +21,29 @@ const DropdownButton = styled.div`
   }
 `
 
-const Username = styled.span`
+const Username = styled(NonSelectableText)`
+  border-radius: ${(p) => p.theme.radius.md};
+  padding: ${(p) => p.theme.spacing.xxs};
   margin-left: ${(p) => p.theme.spacing.xs};
+  transition: all 0.4s;
+
+  &:hover {
+    background: ${(p) => p.theme.colors.primary.light};
+  }
 `
+
+const StyledButton = styled(Button)`
+  padding-left: 0px;
+  color: ${(p) => p.theme.colors.primary.dark};
+`
+
+const WithBadge = ({ children, badge }) => {
+  return (
+    <Badge count={badge} dot offset={[-2, 3]}>
+      {children}
+    </Badge>
+  )
+}
 
 const LeftHeader = () => {
   const [{ auth, ui }, dispatch] = useStore()
@@ -49,7 +69,6 @@ const LeftHeader = () => {
           .currentUser.sendEmailVerification()
           .then(() => dispatch({ type: SET_GLOBAL_MESSAGE, payload: 'Verification email sent!' }))
           .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: error.message }))
-          .finally(() => dispatch({ type: SET_GLOBAL_MESSAGE, payload: '' }))
         break
       }
 
@@ -66,9 +85,17 @@ const LeftHeader = () => {
   }
 
   if (ui.isMobile) {
-    if (ui.isSideMenuOpen)
-      return <MenuUnfoldOutlined style={{ fontSize: 21 }} onClick={() => onToggleSideMenu(false)} />
-    return <MenuFoldOutlined style={{ fontSize: 21 }} onClick={() => onToggleSideMenu(true)} />
+    return (
+      <StyledButton type='link' onClick={() => onToggleSideMenu(!ui.isSideMenuOpen)}>
+        <WithBadge badge={auth.user.emailVerified ? 0 : 1}>
+          {ui.isSideMenuOpen ? (
+            <MenuFoldOutlined style={{ fontSize: 21 }} />
+          ) : (
+            <MenuUnfoldOutlined style={{ fontSize: 21 }} />
+          )}
+        </WithBadge>
+      </StyledButton>
+    )
   }
 
   return (
