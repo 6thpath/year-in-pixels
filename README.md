@@ -9,6 +9,10 @@ This is an educational project. The whole idea came from a single [image](https:
 
 https://year-in-pixels-af189.web.app/
 
+## Development
+
+- Clone project: `git clone https://github.com/lPaths/year-in-pixels.git`
+
 ## Requirements and Configuration
 
 You’ll need to have Node 8.16.0 or Node 10.16.0 or later version on your local development machine.
