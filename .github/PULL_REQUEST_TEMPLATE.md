@@ -10,9 +10,3 @@ Replace [ ] by [x] to check these checkboxes!
 - [ ] 🐛 Bug fix
 - [ ] 💅 Enhancement
 - [ ] 🚀 New feature
-
-#### Main update on the
-
-- [ ] api
-- [ ] frontend
-- [ ] lib
