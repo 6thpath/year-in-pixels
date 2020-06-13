@@ -6,7 +6,7 @@ import { useTransition, animated } from 'react-spring'
 import { PIXELS } from 'constants/Collection'
 import { useStore } from 'store'
 import { SET_DATA } from 'store/data'
-import { SET_MOOD_MODAL_VISIBLE } from 'store/ui'
+import { SET_MOOD_MODAL_VISIBLE, SET_TUTORIAL_VISIBLE } from 'store/ui'
 import { db } from 'utils/firebase'
 import theme from 'theme'
 
@@ -36,7 +36,7 @@ const Container = styled.div`
 const AnimatedContainer = animated(Container)
 
 const Col = styled.div`
-  border: 1px solid #fff;
+  border: 1px solid ${(p) => p.theme.colors.white};
   border-width: 1px 0 1px 1px;
 
   &:last-child {
@@ -50,12 +50,17 @@ const Cell = styled.div`
   min-height: 23px;
   text-align: center;
   vertical-align: middle;
-  border: 1px solid #fff;
+  border: 1px solid ${(p) => p.theme.colors.white};
   border-width: 0 0 1px 0;
   background: ${(p) =>
-    p.header ? p.theme.colors.primary.lighter : p.type === 'nodate' ? p.theme.colors.mood.nodate : p.background};
-  transition: all 0.4s, border 0s, border-radius 0s;
-  ${(p) => p.header && 'cursor: pointer;'}
+    p.header
+      ? p.selected
+        ? p.theme.colors.primary.light
+        : p.theme.colors.primary.lighter
+      : p.type === 'nodate'
+      ? p.theme.colors.mood.nodate
+      : p.background};
+  transition: all 0.4s, border-bottom-width 1s 0.3s, border-radius 1s;
   ${(p) =>
     p.today &&
     `
@@ -73,6 +78,8 @@ const Cell = styled.div`
     border-bottom-width: 0;
     border-radius: ${p.theme.radius.sm};
     box-shadow: 0 0 30px 2px ${p.theme.colors.primary.main};
+
+    transition: all 0.4s, border-bottom-width 0s, border-radius 0s;
   }
 `}
 
@@ -83,6 +90,8 @@ const Cell = styled.div`
   ${(p) =>
     p.header &&
     `
+    cursor: pointer;
+
     &:hover {
       background: ${p.theme.colors.primary.light};
     }
@@ -94,6 +103,7 @@ const getColor = (emt) => theme.colors.mood[emt] || 'rgba(255, 255, 255, .35)'
 const Body = () => {
   const [{ auth, data, ui }, dispatch] = useStore()
   const [dates, setDates] = useState({})
+  const [selectedMonth, setSelectedMonth] = useState(null)
 
   const transitions = useTransition(data.selectedYear, null, {
     from: { opacity: 0, transform: 'scale(0.8)' },
@@ -127,6 +137,7 @@ const Body = () => {
             key: monthDataKey,
             shortName: monthMoment.format('MMM'),
             fullName: monthMoment.format('MMMM'),
+            selected: selectedMonth === monthDataKey,
             dates: {},
           }
 
@@ -149,13 +160,17 @@ const Body = () => {
     } else {
       setDates({})
     }
-  }, [data.data, data.selectedYear])
+  }, [data.data, data.selectedYear, selectedMonth])
 
   const renderNoDate = (amount) => {
     return Array.from({ length: amount }, (_, index) => <Cell key={index} type='nodate' />)
   }
 
   const openSelection = () => {
+    if (ui.tutorialVisible) {
+      dispatch({ type: SET_TUTORIAL_VISIBLE, payload: false })
+    }
+
     dispatch({ type: SET_MOOD_MODAL_VISIBLE, payload: true })
   }
 
@@ -166,7 +181,7 @@ const Body = () => {
   return transitions.map(
     ({ item, key, props }) =>
       item && (
-        <AnimatedContainer key={key} style={props}>
+        <AnimatedContainer id='t-body' key={key} style={props}>
           <Col>
             {Array.from({ length: 32 }, (_, index) => {
               return (
@@ -185,12 +200,17 @@ const Body = () => {
 
             return (
               <Col key={index}>
-                <Cell header>{dates[month].shortName}</Cell>
+                <Cell header selected={dates[month].selected} onClick={() => setSelectedMonth(dates[month].key)}>
+                  {dates[month].shortName}
+                </Cell>
+
                 {Object.keys(dates[month].dates).map((day, _index) => {
                   return (
                     <Cell
                       key={_index}
+                      selected={dates[month].selected}
                       {...(dates[month].dates[day].key === data.todayDataKey && {
+                        id: 't-today-square',
                         isMobile: ui.isMobile,
                         today: true,
                         onClick: openSelection,

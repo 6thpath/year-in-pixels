@@ -6,8 +6,6 @@ import { useStore } from 'store'
 import { SET_YEAR } from 'store/data'
 
 const StyledDatePicker = styled(DatePicker)`
-  margin-left: ${(p) => p.theme.spacing.xs};
-
   input {
     &::placeholder {
       user-select: none;
@@ -30,14 +28,16 @@ const RightHeader = () => {
 
   return (
     <>
-      <StyledDatePicker
-        ref={datePickerRef}
-        value={data.selectedYear}
-        onChange={onDateChange}
-        onOpenChange={onOpenChange}
-        picker='year'
-        inputReadOnly
-      />
+      <div id='t-year-picker'>
+        <StyledDatePicker
+          ref={datePickerRef}
+          value={data.selectedYear}
+          onChange={onDateChange}
+          onOpenChange={onOpenChange}
+          picker='year'
+          inputReadOnly
+        />
+      </div>
     </>
   )
 }

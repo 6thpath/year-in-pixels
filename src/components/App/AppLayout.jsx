@@ -9,6 +9,7 @@ import * as Routes from 'routes'
 import NotFound from 'components/NotFound'
 import Home from 'pages/Home'
 import ScrollToTop from './ScrollToTop'
+import AppTutorial from 'components/Tour/Tour'
 
 import SideMenu from 'pages/Home/SideMenu'
 
@@ -37,6 +38,8 @@ const AppLayout = () => {
   return (
     <Container id='outer-container'>
       {ui.isMobile && <SideMenu />}
+
+      <AppTutorial />
 
       <Root>
         <ScrollToTop>

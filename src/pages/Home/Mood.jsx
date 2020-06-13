@@ -152,7 +152,7 @@ const Mood = ({ containerRef }) => {
 
   return (
     <>
-      <Container position={position} hasBackground={hasBackground}>
+      <Container id='t-mood-bar' position={position} hasBackground={hasBackground}>
         <MoodContainer ref={moodRef}>
           <Transition
             items={Object.keys(theme.colors.mood)}

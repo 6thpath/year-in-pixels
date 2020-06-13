@@ -2,16 +2,17 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { scaleDown as Menu } from 'react-burger-menu'
 import { Badge } from 'antd'
-import { MailOutlined, LogoutOutlined } from '@ant-design/icons'
+import { MailOutlined, LogoutOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 
 import './SideMenu.less'
 
 import { useCountdown } from 'hooks/useCountdown'
 import { useStore } from 'store'
-import { SET_SIDEMENU_VISIBLE, SET_GLOBAL_MESSAGE } from 'store/ui'
+import { SET_SIDEMENU_VISIBLE, SET_GLOBAL_MESSAGE, SET_TUTORIAL_VISIBLE } from 'store/ui'
 import { firebase, signOut } from 'utils/firebase'
 
 import Avatar from 'components/Avatar'
+import { Hr } from 'components/Hr'
 
 const UserInfo = styled.div`
   margin: ${(p) => p.theme.spacing.xxs};
@@ -82,6 +83,11 @@ const SideBar = () => {
       .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
   }
 
+  const openTour = () => {
+    dispatch({ type: SET_SIDEMENU_VISIBLE, payload: false })
+    dispatch({ type: SET_TUTORIAL_VISIBLE, payload: true })
+  }
+
   return (
     <Menu
       width={ui.isMobile ? '60vw' : 300}
@@ -112,6 +118,15 @@ const SideBar = () => {
 
       <MenuButton onClick={signOut}>
         <LogoutOutlined /> Sign out
+      </MenuButton>
+
+      <Hr content='Getting lost?' />
+
+      <MenuButton onClick={openTour}>
+        <Badge count={ui.firstAccess === 'true' ? 1 : 0} dot offset={[-1, 1]}>
+          <QuestionCircleOutlined />
+        </Badge>
+        <Text>Help</Text>
       </MenuButton>
     </Menu>
   )

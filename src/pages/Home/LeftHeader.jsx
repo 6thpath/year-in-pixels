@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Menu, Dropdown, Badge, Button, Tooltip, Input } from 'antd'
-import { MailOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import {
+  MailOutlined,
+  QuestionCircleOutlined,
+  LogoutOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+} from '@ant-design/icons'
 
 import { useCountdown } from 'hooks/useCountdown'
 import { useStore } from 'store'
 import { SET_AUTH_USER } from 'store/auth'
-import { SET_GLOBAL_MESSAGE, SET_SIDEMENU_VISIBLE } from 'store/ui'
+import { SET_GLOBAL_MESSAGE, SET_SIDEMENU_VISIBLE, SET_TUTORIAL_VISIBLE } from 'store/ui'
 import { firebase, signOut, getUsersProfile } from 'utils/firebase'
 
 import Avatar from 'components/Avatar'
@@ -18,7 +24,7 @@ const DropdownButton = styled.div`
   transition: all 0.4s;
 
   &:hover {
-    box-shadow: 0 0 10px 2px ${(p) => p.theme.colors.grey[500]};
+    box-shadow: 0 0 10px 2px ${(p) => p.theme.colors.grey[400]};
   }
 `
 
@@ -44,7 +50,8 @@ const Text = styled.span`
 `
 
 const StyledButton = styled(Button)`
-  padding-left: 0px;
+  padding-left: ${(p) => p.theme.spacing.xxs};
+  padding-right: ${(p) => p.theme.spacing.xxs};
   color: ${(p) => p.theme.colors.primary.dark};
 `
 
@@ -68,6 +75,9 @@ const LeftHeader = () => {
   }
 
   const updateUsername = () => {
+    if (!username.trim().length)
+      return dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: 'Please input a valid name', type: 'error' } })
+
     firebase
       .auth()
       .currentUser.updateProfile({
@@ -94,11 +104,7 @@ const LeftHeader = () => {
     setIsEditing(false)
   }
 
-  const onTimerFinish = () => {
-    setRVEDisabled(false)
-  }
-
-  const countdown = useCountdown({ seconds: 60, onFinish: onTimerFinish })
+  const countdown = useCountdown({ seconds: 60, onFinish: () => setRVEDisabled(false) })
 
   const onSignOut = () => {
     signOut((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
@@ -123,6 +129,11 @@ const LeftHeader = () => {
         onSignOut()
         break
 
+      case 'tour': {
+        dispatch({ type: SET_TUTORIAL_VISIBLE, payload: true })
+        break
+      }
+
       default:
     }
   }
@@ -131,10 +142,15 @@ const LeftHeader = () => {
     dispatch({ type: SET_SIDEMENU_VISIBLE, payload: boolean })
   }
 
+  let badgeCount = 0
+
+  if (!auth.user.emailVerified) badgeCount += 1
+  if (ui.firstAccess === 'true') badgeCount += 1
+
   if (ui.isMobile) {
     return (
       <StyledButton type='link' onClick={() => onToggleSideMenu(!ui.isSideMenuOpen)}>
-        <WithBadge badge={auth.user.emailVerified ? 0 : 1}>
+        <WithBadge badge={badgeCount}>
           {ui.isSideMenuOpen ? (
             <MenuFoldOutlined style={{ fontSize: 21 }} />
           ) : (
@@ -176,16 +192,29 @@ const LeftHeader = () => {
             <Menu.Item key='signout' icon={<LogoutOutlined />}>
               <Text>Sign out</Text>
             </Menu.Item>
+
+            <Menu.Divider />
+
+            <Menu.Item
+              key='tour'
+              icon={
+                <Badge count={ui.firstAccess === 'true' ? 1 : 0} dot offset={[-8, 2]}>
+                  <QuestionCircleOutlined />
+                </Badge>
+              }
+            >
+              <Tooltip
+                placement='right'
+                title={`If this is your first time using Year-In-Pixels or getting lost in space, then you should visit this user tour.`}
+              >
+                <Text>Help</Text>
+              </Tooltip>
+            </Menu.Item>
           </Menu>
         }
       >
         <DropdownButton>
-          <Avatar
-            photoUrl={auth.user.photoUrl}
-            name={auth.user.name}
-            email={auth.user.email}
-            badge={auth.user.emailVerified ? 0 : 1}
-          />
+          <Avatar photoUrl={auth.user.photoUrl} name={auth.user.name} email={auth.user.email} badge={badgeCount} />
         </DropdownButton>
       </Dropdown>
 
@@ -204,9 +233,12 @@ const LeftHeader = () => {
             }
           }}
           onBlur={onBlur}
+          maxLength={30}
         />
       ) : (
-        <Username onClick={() => setIsEditing(true)}>Hi, {auth.user.name || auth.user.email}!</Username>
+        <Username onClick={() => setIsEditing(true)}>
+          Hi <b>{auth.user.name || auth.user.email}</b>!
+        </Username>
       )}
     </>
   )
