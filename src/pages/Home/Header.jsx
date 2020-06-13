@@ -22,7 +22,7 @@ const Container = styled.div`
   box-shadow: 0 4px 4px -2px ${(p) => p.theme.colors.grey[700]};
 `
 
-const ComponentContainer = styled.div`
+const Limiter = styled.div`
   width: 100%;
   height: 100%;
 
@@ -40,7 +40,7 @@ const ComponentContainer = styled.div`
   }
 `
 
-const HeaderGroup = styled.div`
+const ItemGroup = styled.div`
   height: 100%;
 
   display: flex;
@@ -52,15 +52,15 @@ const HeaderGroup = styled.div`
 const Header = () => {
   return (
     <Container>
-      <ComponentContainer>
-        <HeaderGroup>
+      <Limiter>
+        <ItemGroup>
           <LeftHeader />
-        </HeaderGroup>
+        </ItemGroup>
 
-        <HeaderGroup>
+        <ItemGroup>
           <RightHeader />
-        </HeaderGroup>
-      </ComponentContainer>
+        </ItemGroup>
+      </Limiter>
     </Container>
   )
 }

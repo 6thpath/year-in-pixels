@@ -56,13 +56,13 @@ const ScrollButton = styled.div`
   }
 `
 
-const EmtScrollPane = ({ ecRef }) => {
+const MoodScrollPane = ({ moodRef }) => {
   const [{ ui }] = useStore()
   const [scrollButton, setScrollButton] = useState('right')
 
   const handleCtnScroll = useCallback(() => {
-    if (ecRef.current) {
-      const { scrollWidth, scrollLeft, clientWidth } = ecRef.current
+    if (moodRef.current) {
+      const { scrollWidth, scrollLeft, clientWidth } = moodRef.current
 
       if (scrollWidth > clientWidth) {
         if (scrollLeft === 0) {
@@ -76,26 +76,26 @@ const EmtScrollPane = ({ ecRef }) => {
         setScrollButton(null)
       }
     }
-  }, [ecRef])
+  }, [moodRef])
 
   const scrollLeft = () => {
-    if (ecRef.current) ecRef.current.scrollTo(ecRef.current.scrollLeft - window.innerWidth, 0)
+    if (moodRef.current) moodRef.current.scrollTo(moodRef.current.scrollLeft - window.innerWidth, 0)
   }
 
   const scrollRight = () => {
-    if (ecRef.current) ecRef.current.scrollTo(ecRef.current.scrollLeft + window.innerWidth, 0)
+    if (moodRef.current) moodRef.current.scrollTo(moodRef.current.scrollLeft + window.innerWidth, 0)
   }
 
   useEffect(() => {
-    if (ecRef.current) {
-      const ref = ecRef.current
+    if (moodRef.current) {
+      const ref = moodRef.current
       ref.addEventListener('scroll', debounce(handleCtnScroll, 100))
 
       return () => {
         ref.removeEventListener('scroll', handleCtnScroll)
       }
     }
-  }, [ecRef, handleCtnScroll])
+  }, [moodRef, handleCtnScroll])
 
   return (
     <ScrollBtnCtn>
@@ -119,8 +119,8 @@ const EmtScrollPane = ({ ecRef }) => {
   )
 }
 
-EmtScrollPane.propTypes = {
+MoodScrollPane.propTypes = {
   ecRef: PropTypes.any,
 }
 
-export default EmtScrollPane
+export default MoodScrollPane

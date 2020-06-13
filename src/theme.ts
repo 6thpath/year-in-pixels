@@ -26,7 +26,7 @@ export default {
     white: '#ffffff',
     purple: '#531dab',
 
-    emotion: {
+    mood: {
       amazing: '#ff4d4f',
       excited: '#ff85c0',
       energetic: '#fadb14',

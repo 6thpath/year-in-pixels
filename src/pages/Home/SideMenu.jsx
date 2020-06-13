@@ -43,8 +43,9 @@ const MenuButton = styled.button`
   }
 `
 
-const NonSelectableText = styled.span`
+const Text = styled.span`
   user-select: none;
+  margin-left: ${(p) => p.theme.spacing.xxs};
 `
 
 const SideBar = () => {
@@ -90,7 +91,7 @@ const SideBar = () => {
       customCrossIcon={false}
       onStateChange={onSetSideMenuState}
       pageWrapId='styled-home-container'
-      outerContainerId='root'
+      outerContainerId='outer-container'
     >
       <UserInfo>
         <Avatar size={48} photoUrl={auth.user.photoUrl} name={auth.user.name} email={auth.user.email} />
@@ -99,13 +100,13 @@ const SideBar = () => {
 
       {!auth.user.emailVerified && (
         <MenuButton onClick={requestVerify} disabled={RVEdisabled}>
-          <NonSelectableText>
-            <Badge count={1} dot offset={[-1, 1]}>
-              <MailOutlined />
-            </Badge>{' '}
+          <Badge count={1} dot offset={[-1, 1]}>
+            <MailOutlined />
+          </Badge>
+          <Text>
             Request Verification Email
             {RVEdisabled ? `(${countdown})` : ''}
-          </NonSelectableText>
+          </Text>
         </MenuButton>
       )}
 

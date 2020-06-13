@@ -13,11 +13,12 @@ import Avatar from 'components/Avatar'
 
 const DropdownButton = styled.div`
   cursor: pointer;
-  filter: none;
+  border-radius: 50%;
+  box-shadow: 0 0 0px 0px ${(p) => p.theme.colors.grey[200]};
   transition: all 0.4s;
 
   &:hover {
-    filter: blur(1px);
+    box-shadow: 0 0 10px 2px ${(p) => p.theme.colors.grey[500]};
   }
 `
 
@@ -38,7 +39,7 @@ const Username = styled.span`
   }
 `
 
-const NonSelectableText = styled.span`
+const Text = styled.span`
   user-select: none;
 `
 
@@ -62,8 +63,8 @@ const LeftHeader = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [username, setUsername] = useState(auth.user.name || '')
 
-  const onChangeUsername = (e) => {
-    setUsername(e.target.value)
+  const onChangeUsername = ({ target: { value } }) => {
+    setUsername(value)
   }
 
   const updateUsername = () => {
@@ -164,16 +165,16 @@ const LeftHeader = () => {
                   placement='right'
                   title={`Your account hasn't been verified yet. This means you'll lost this account if someone use social sign in with email same as current account's email.`}
                 >
-                  <NonSelectableText>
+                  <Text>
                     Request Verification Email
                     {RVEdisabled ? `(${countdown})` : ''}
-                  </NonSelectableText>
+                  </Text>
                 </Tooltip>
               </Menu.Item>
             )}
 
             <Menu.Item key='signout' icon={<LogoutOutlined />}>
-              <NonSelectableText>Sign out</NonSelectableText>
+              <Text>Sign out</Text>
             </Menu.Item>
           </Menu>
         }

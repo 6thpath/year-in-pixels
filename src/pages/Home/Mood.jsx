@@ -4,10 +4,9 @@ import { Button } from 'antd'
 import { DownCircleOutlined, UpCircleOutlined } from '@ant-design/icons'
 import { Transition, animated } from 'react-spring/renderprops'
 
-import { HEADER_HEIGHT } from 'constants/Layout'
 import theme from 'theme'
 
-import EmtScrollPane from './EmtScrollPane'
+import MoodScrollPane from './MoodScrollPane'
 
 const Container = styled.div`
   position: ${(p) => p.position};
@@ -24,7 +23,7 @@ const Container = styled.div`
   align-items: center;
 `
 
-const EmotionsContainer = styled.div`
+const MoodContainer = styled.div`
   width: 100%;
   top: 0;
   overflow-x: auto;
@@ -116,61 +115,62 @@ const Text = styled.span`
   text-transform: capitalize;
 `
 
-const Emotions = () => {
+const Mood = ({ containerRef }) => {
   const [position, setPosition] = useState('relative')
   const [hasBackground, setHasBackground] = useState(false)
   const [buttonVisible, setButtonVisible] = useState(false)
 
-  const ecRef = useRef(null)
+  const moodRef = useRef(null)
 
   const onChangePosition = (pos) => {
     setPosition(pos)
 
-    if (window.pageYOffset >= 17 && pos === 'sticky') setHasBackground(true)
+    if (containerRef.current.scrollTop >= 17 && pos === 'sticky') setHasBackground(true)
     else setHasBackground(false)
 
-    if (window.pageYOffset > HEADER_HEIGHT / 2 - 6) setButtonVisible(true)
+    if (containerRef.current.scrollTop > 26) setButtonVisible(true)
     else setButtonVisible(false)
   }
 
   const handleScroll = useCallback(() => {
-    console.log('x')
-    if (window.pageYOffset >= 17 && position === 'sticky') setHasBackground(true)
+    if (containerRef.current.scrollTop >= 17 && position === 'sticky') setHasBackground(true)
     else setHasBackground(false)
 
-    if (window.pageYOffset > HEADER_HEIGHT / 2 - 6) setButtonVisible(true)
+    if (containerRef.current.scrollTop > 26) setButtonVisible(true)
     else setButtonVisible(false)
-  }, [position])
+  }, [containerRef, position])
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
+    const ref = containerRef.current
+
+    ref.addEventListener('scroll', handleScroll)
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
+      ref.removeEventListener('scroll', handleScroll)
     }
-  }, [handleScroll])
+  }, [containerRef, handleScroll])
 
   return (
     <>
       <Container position={position} hasBackground={hasBackground}>
-        <EmotionsContainer ref={ecRef}>
+        <MoodContainer ref={moodRef}>
           <Transition
-            items={Object.keys(theme.colors.emotion)}
+            items={Object.keys(theme.colors.mood)}
             from={{ transform: 'translateY(-10px)', opacity: 0, zIndex: -1 }}
             enter={{ transform: 'translateY(0px)', opacity: 1, zIndex: 1 }}
             leave={{ transform: 'translateY(-10px)', opacity: 0, zIndex: -1 }}
             trail={100}
           >
-            {(emt) => (props) => (
-              <AnimatedCell key={emt} style={props}>
-                <ColorBlock style={{ backgroundColor: theme.colors.emotion[emt] }} type={emt} />
-                <Text>{emt}</Text>
+            {(m) => (props) => (
+              <AnimatedCell key={m} style={props}>
+                <ColorBlock style={{ backgroundColor: theme.colors.mood[m] }} type={m} />
+                <Text>{m}</Text>
               </AnimatedCell>
             )}
           </Transition>
-        </EmotionsContainer>
+        </MoodContainer>
 
-        <EmtScrollPane ecRef={ecRef} />
+        <MoodScrollPane moodRef={moodRef} />
       </Container>
 
       <Transition
@@ -185,7 +185,7 @@ const Emotions = () => {
           show &&
           ((props) => (
             <ButtonContainer>
-              <AnimatedStlBtn style={{ ...props, top: HEADER_HEIGHT }} onClick={() => onChangePosition('relative')}>
+              <AnimatedStlBtn style={{ ...props, top: 62 }} onClick={() => onChangePosition('relative')}>
                 <UpCircleOutlined />
               </AnimatedStlBtn>
             </ButtonContainer>
@@ -221,4 +221,4 @@ const Emotions = () => {
   )
 }
 
-export default Emotions
+export default Mood

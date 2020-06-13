@@ -53,7 +53,7 @@ const Cell = styled.div`
   border: 1px solid #fff;
   border-width: 0 0 1px 0;
   background: ${(p) =>
-    p.header ? p.theme.colors.primary.lighter : p.type === 'nodate' ? p.theme.colors.emotion.nodate : p.background};
+    p.header ? p.theme.colors.primary.lighter : p.type === 'nodate' ? p.theme.colors.mood.nodate : p.background};
   transition: all 0.4s, border 0s, border-radius 0s;
   ${(p) => p.header && 'cursor: pointer;'}
   ${(p) =>
@@ -89,7 +89,7 @@ const Cell = styled.div`
 `}
 `
 
-const getColor = (emt) => theme.colors.emotion[emt] || 'rgba(255, 255, 255, .35)'
+const getColor = (emt) => theme.colors.mood[emt] || 'rgba(255, 255, 255, .35)'
 
 const Body = () => {
   const [{ auth, data, ui }, dispatch] = useStore()
@@ -119,25 +119,29 @@ const Body = () => {
       setDates(() => {
         const year = {}
 
-        Array.from({ length: 12 }, (x, monthNumb) => {
+        Array.from({ length: 12 }, (_, monthNumb) => {
           const monthMoment = data.selectedYear.month(monthNumb)
-          const monthKey = `${data.selectedYear.year()}-${monthMoment.format('MMM')}`
+          const monthDataKey = `${data.selectedYear.year()}-${monthMoment.format('MMM')}`
 
           year[monthNumb] = {
-            key: monthKey,
+            key: monthDataKey,
             shortName: monthMoment.format('MMM'),
             fullName: monthMoment.format('MMMM'),
             dates: {},
           }
 
-          Array.from({ length: data.selectedYear.month(monthNumb).daysInMonth() }).map((y, date) => {
-            const dKey = `${monthKey}-${date + 1}`
-            year[monthNumb].dates[date + 1] = { key: dKey, status: getColor((data.data && data.data[dKey]) || '') }
+          Array.from({ length: monthMoment.daysInMonth() }).map((__, date) => {
+            const dateDataKey = `${monthDataKey}-${date + 1}`
 
-            return y
+            year[monthNumb].dates[date + 1] = {
+              key: dateDataKey,
+              status: getColor((data.data && data.data[dateDataKey]) || ''),
+            }
+
+            return __
           })
 
-          return x
+          return _
         })
 
         return year

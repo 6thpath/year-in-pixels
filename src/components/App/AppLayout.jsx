@@ -14,30 +14,28 @@ import SideMenu from 'pages/Home/SideMenu'
 
 import background from 'assets/images/background.png'
 
+const Container = styled.div`
+  height: 100%;
+`
+
 const Root = styled.div`
   display: flex;
   flex-direction: row;
   margin: 0 auto;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  position: absolute;
 
   background-image: url(${background});
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 `
 
 const AppLayout = () => {
   const [{ ui }] = useStore()
 
   return (
-    <>
+    <Container id='outer-container'>
       {ui.isMobile && <SideMenu />}
 
       <Root>
@@ -49,7 +47,7 @@ const AppLayout = () => {
           </Switch>
         </ScrollToTop>
       </Root>
-    </>
+    </Container>
   )
 }
 

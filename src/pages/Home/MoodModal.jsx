@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Modal } from 'antd'
 
+import { PIXELS } from 'constants/Collection'
 import { useStore } from 'store'
 import { SET_MOOD_MODAL_VISIBLE, SET_GLOBAL_MESSAGE } from 'store/ui'
 import { db } from 'utils/firebase'
@@ -58,24 +59,24 @@ const Button = styled.div`
   }
 `
 
-const Selection = () => {
+const MoodModal = () => {
   const [{ auth, data, ui }, dispatch] = useStore()
 
   const onCloseModal = () => {
     dispatch({ type: SET_MOOD_MODAL_VISIBLE, payload: false })
   }
 
-  const onSelect = (emt) => {
+  const onSelect = (mood) => {
     if (Object.keys(data.data).length) {
-      db.collection('pixels')
+      db.collection(PIXELS)
         .doc(auth.user.uid)
-        .update({ [data.todayDataKey]: emt })
+        .update({ [data.todayDataKey]: mood })
         .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
         .finally(onCloseModal)
     } else {
-      db.collection('pixels')
+      db.collection(PIXELS)
         .doc(auth.user.uid)
-        .set({ [data.todayDataKey]: emt })
+        .set({ [data.todayDataKey]: mood })
         .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
         .finally(onCloseModal)
     }
@@ -85,19 +86,19 @@ const Selection = () => {
     <Modal
       title={null}
       footer={null}
-      wrapClassName='styled-mood-modal'
       closable={false}
-      visible={ui.isMoodModalVisible}
       maskClosable
+      wrapClassName='styled-mood-modal'
+      visible={ui.isMoodModalVisible}
       onCancel={onCloseModal}
     >
       <Container>
-        {Object.keys(theme.colors.emotion).map((emt, index) => {
-          if (emt === 'nodate') return <React.Fragment key={emt} />
+        {Object.keys(theme.colors.mood).map((m, index) => {
+          if (m === 'nodate') return <React.Fragment key={m} />
           return (
-            <Cell key={emt}>
-              <Button background={theme.colors.emotion[emt]} onClick={() => onSelect(emt)}>
-                <Text data-text={emt}>{emt}</Text>
+            <Cell key={m}>
+              <Button background={theme.colors.mood[m]} onClick={() => onSelect(m)}>
+                <Text>{m}</Text>
               </Button>
             </Cell>
           )
@@ -107,4 +108,4 @@ const Selection = () => {
   )
 }
 
-export default Selection
+export default MoodModal

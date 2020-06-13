@@ -44,6 +44,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
+    height: 100%;
     font-family: ${theme.font.family};
     color: ${theme.colors.text.primary};
 
@@ -53,8 +54,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   #root {
-    min-height: 100%;
-    position: relative;
+    height: 100%;
   }
 
   .styled-pwd-modal {
