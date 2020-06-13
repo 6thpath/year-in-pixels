@@ -25,7 +25,21 @@ There're 3 steps:
 
 ### Replacing Firebase config object
 
-Firebase config locate at `src/utils/firebase.ts`
+- Create file `config.ts` in `src/utils/`
+- Export config. E.g.
+
+```js
+const firebaseConfig = {
+  apiKey: 'api-key',
+  authDomain: 'project-id.firebaseapp.com',
+  databaseURL: 'https://project-id.firebaseio.com',
+  projectId: 'project-id',
+  storageBucket: 'project-id.appspot.com',
+  messagingSenderId: 'sender-id',
+  appId: 'app-id',
+  measurementId: 'G-measurement-id',
+}
+```
 
 ### Enable Firebase authentication methods
 
