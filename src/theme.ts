@@ -1,11 +1,6 @@
-/**
- * Theme for applying consistent styling to the app
- */
-
+/** Theme for applying consistent styling to the app */
 export default {
-  /**
-   * Font
-   */
+  /** Font */
   font: {
     family: `'Quicksand', sans-serif`,
     weight: {
@@ -24,9 +19,7 @@ export default {
     },
   },
 
-  /**
-   * Colors
-   */
+  /** Colors */
   colors: {
     body: '#f7f7f7',
     black: '#000000',
@@ -63,18 +56,12 @@ export default {
       hint: 'rgba(0, 0, 0, 0.38)',
     },
 
-    skeleton: {
-      background: '#f3f3f3',
-      foreground: '#ecebeb',
-    },
-
     error: {
       lighter: '#ffccc7',
       light: '#ffa39e',
       semi: '#ff4d4f',
       main: '#f5222d',
       dark: '#cf1322',
-      contrastText: '#ffffff',
     },
 
     success: {
@@ -115,19 +102,7 @@ export default {
     },
   },
 
-  /**
-   * Shadows
-   */
-  shadows: {
-    sm: '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)',
-    md: 'rgba(0, 0, 0, 0.3) 0px 1px 8px 0px',
-    lg: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-    xl: '0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23)',
-  },
-
-  /**
-   * Breakpoints
-   */
+  /** Screen Breakpoints */
   screen: {
     xs: '540px',
     sm: '640px',
@@ -136,11 +111,9 @@ export default {
     xl: '1230px',
   },
 
-  /**
-   * Spacing
-   */
+  /** Spacing */
   spacing: {
-    none: 0,
+    none: '0',
     xxs: '5px',
     xs: '10px',
     sm: '20px',
@@ -149,31 +122,19 @@ export default {
     xl: '60px',
   },
 
-  /**
-   * Border radius
-   */
+  /** Border radius */
   radius: {
     sm: '3px',
     md: '6px',
     lg: '12px',
   },
 
-  /**
-   * z-index
-   */
+  /** z-index */
   zIndex: {
-    background: -1,
     xs: 10,
     sm: 20,
     md: 30,
     lg: 40,
     xl: 50,
-  },
-
-  /**
-   * Transition
-   */
-  transition: {
-    duration: '0.5s',
   },
 }

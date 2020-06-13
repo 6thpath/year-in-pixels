@@ -7,7 +7,6 @@ import { Transition, animated } from 'react-spring/renderprops'
 import { HEADER_HEIGHT } from 'constants/Layout'
 import theme from 'theme'
 
-import { NonSelectableText } from 'components/Text'
 import EmtScrollPane from './EmtScrollPane'
 
 const Container = styled.div`
@@ -111,7 +110,8 @@ const ColorBlock = styled.div`
   }
 `
 
-const Text = styled(NonSelectableText)`
+const Text = styled.span`
+  user-select: none;
   margin-left: ${(p) => p.theme.spacing.xxs};
   text-transform: capitalize;
 `
@@ -133,7 +133,8 @@ const Emotions = () => {
     else setButtonVisible(false)
   }
 
-  const handleWindowScroll = useCallback(() => {
+  const handleScroll = useCallback(() => {
+    console.log('x')
     if (window.pageYOffset >= 17 && position === 'sticky') setHasBackground(true)
     else setHasBackground(false)
 
@@ -142,12 +143,12 @@ const Emotions = () => {
   }, [position])
 
   useEffect(() => {
-    window.addEventListener('scroll', handleWindowScroll)
+    window.addEventListener('scroll', handleScroll)
 
     return () => {
-      window.removeEventListener('scroll', handleWindowScroll)
+      window.removeEventListener('scroll', handleScroll)
     }
-  }, [handleWindowScroll])
+  }, [handleScroll])
 
   return (
     <>

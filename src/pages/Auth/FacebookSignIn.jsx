@@ -23,9 +23,6 @@ const FacebookSignIn = () => {
     firebase
       .auth()
       .signInWithPopup(facebookProvider)
-      .then((result) => {
-        window.localStorage.setItem('accessToken', result.credential.accessToken)
-      })
       .catch((error) => {
         switch (error.code) {
           case 'auth/account-exists-with-different-credential': {

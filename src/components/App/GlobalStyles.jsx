@@ -2,7 +2,7 @@ import { createGlobalStyle, css } from 'styled-components'
 
 import theme from 'theme'
 
-const Scroll = css`
+const scrollCss = css`
   /* width */
   ::-webkit-scrollbar {
     width: 4px;
@@ -28,11 +28,9 @@ const Scroll = css`
   }
 `
 
-/**
- * Global styles for the application
- */
+/** Global styles for the application */
 export const GlobalStyle = createGlobalStyle`
-  ${Scroll}
+  ${scrollCss}
 
   html {
     height: 100%;
@@ -57,5 +55,25 @@ export const GlobalStyle = createGlobalStyle`
   #root {
     min-height: 100%;
     position: relative;
+  }
+
+  .styled-pwd-modal {
+    .ant-modal-content {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+  }
+
+  .styled-mood-modal {
+    border-radius: 20px;
+  }
+
+
+  .styled-tooltip-overlay {
+    > div {
+      > .ant-tooltip-inner {
+        border-radius: 4px;
+      }
+    }
   }
 `

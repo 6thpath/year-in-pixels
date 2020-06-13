@@ -1,24 +1,21 @@
 import moment from 'moment'
 
+import { IAction } from './_types'
+
 /**
  * Actions types
  */
-export const SET_DATETIME = 'SET_DATETIME'
+export const SET_YEAR = 'SET_YEAR'
 export const SET_DATA = 'SET_DATA'
-export const CLEAR_DATA = 'CLEAR_DATA'
+export const RESET_DATA_STORE = 'RESET_DATA_STORE'
 
 /**
  * Initial State
  */
 export const dataInitialState = {
-  todayKey: moment().format('YYYY-MMM-D'),
+  todayDataKey: moment().format('YYYY-MMM-D'),
   selectedYear: moment(),
   data: {},
-}
-
-interface IAction {
-  type: string
-  payload: any
 }
 
 /**
@@ -26,7 +23,7 @@ interface IAction {
  */
 export const dataReducer = (state = dataInitialState, action: IAction) => {
   switch (action.type) {
-    case SET_DATETIME: {
+    case SET_YEAR: {
       return {
         ...state,
         selectedYear: action.payload,
@@ -40,7 +37,7 @@ export const dataReducer = (state = dataInitialState, action: IAction) => {
       }
     }
 
-    case CLEAR_DATA: {
+    case RESET_DATA_STORE: {
       return {
         ...state,
         ...dataInitialState,

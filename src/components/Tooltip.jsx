@@ -1,18 +1,17 @@
 import React from 'react'
-import { Tooltip } from 'antd'
 import PropTypes from 'prop-types'
-
-import './Tooltip.less'
+import { Tooltip as AntTooltip } from 'antd'
 
 import { usePrevious } from 'hooks/usePrevious'
 import theme from 'theme'
 
-const ETooltip = ({ children, visible, title, type = 'error', placement = 'top' }) => {
+const Tooltip = ({ children, visible, title, type = 'error', placement = 'top' }) => {
+  // Get previous title
   const prevTitle = usePrevious(title)
   let titleToShow
 
-  // Get title
-  if (!visible) titleToShow = prevTitle
+  // Decide which title to show, prevent overlay's width change to 0 before hide
+  if (!visible && prevTitle) titleToShow = prevTitle
   else titleToShow = title
 
   let colorConfig = {}
@@ -29,19 +28,19 @@ const ETooltip = ({ children, visible, title, type = 'error', placement = 'top' 
   }
 
   return (
-    <Tooltip
+    <AntTooltip
       {...colorConfig}
-      overlayClassName='styled-overlay'
+      overlayClassName='styled-tooltip-overlay'
       placement={placement}
       title={titleToShow}
       {...(typeof visible === 'boolean' ? { visible } : {})}
     >
       {children}
-    </Tooltip>
+    </AntTooltip>
   )
 }
 
-ETooltip.propTypes = {
+Tooltip.propTypes = {
   children: PropTypes.node,
   visible: PropTypes.bool,
   title: PropTypes.any,
@@ -49,4 +48,4 @@ ETooltip.propTypes = {
   placement: PropTypes.string,
 }
 
-export default ETooltip
+export default Tooltip

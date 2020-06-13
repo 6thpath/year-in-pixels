@@ -44,6 +44,6 @@ export function getUsersProfile(user) {
   }
 }
 
-export function signOut(onError = () => {}) {
+export async function signOut(onError = () => {}) {
   return firebase.auth().signOut().catch(onError)
 }

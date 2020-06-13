@@ -11,7 +11,7 @@ import { emailRegex } from 'utils/regex'
 import * as Routes from 'routes'
 
 import { Button, ButtonLink } from 'components/Button'
-import { Hr } from 'components/Text'
+import { Hr } from 'components/Hr'
 import Tooltip from 'components/Tooltip'
 
 import FacebookSignIn from './FacebookSignIn'

@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import { Modal } from 'antd'
 
-import './PwdPrompt.less'
-
 import theme from 'theme'
 
 const Form = styled.form`
@@ -111,7 +109,7 @@ const Prompt = ({ visible, title, description, email, close, afterClose }) => {
 
   return (
     <Modal
-      wrapClassName='styled-modal'
+      wrapClassName='styled-pwd-modal'
       visible={visible}
       title={title}
       centered

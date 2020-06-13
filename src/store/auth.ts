@@ -1,9 +1,11 @@
+import { IAction } from './_types'
+
 /**
  * Actions types
  */
 export const SET_AUTH_USER = 'SET_AUTH_USER'
 export const SET_TOKEN = 'SET_TOKEN'
-export const CLEAR_AUTH_USER = 'CLEAR_AUTH_USER'
+export const RESET_AUTH_STORE = 'RESET_AUTH_STORE'
 
 /**
  * Initial State
@@ -11,11 +13,6 @@ export const CLEAR_AUTH_USER = 'CLEAR_AUTH_USER'
 export const authInitialState = {
   user: null,
   token: null,
-}
-
-interface IAction {
-  type: string
-  payload: any
 }
 
 /**
@@ -35,7 +32,7 @@ export const authReducer = (state = authInitialState, action: IAction) => {
         token: action.payload,
       }
 
-    case CLEAR_AUTH_USER: {
+    case RESET_AUTH_STORE: {
       return {
         ...state,
         ...authInitialState,

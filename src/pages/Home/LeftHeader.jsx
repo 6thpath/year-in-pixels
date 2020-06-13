@@ -6,11 +6,10 @@ import { MailOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } fr
 import { useCountdown } from 'hooks/useCountdown'
 import { useStore } from 'store'
 import { SET_AUTH_USER } from 'store/auth'
-import { SET_GLOBAL_MESSAGE, SET_SIDEMENU_STATE } from 'store/ui'
+import { SET_GLOBAL_MESSAGE, SET_SIDEMENU_VISIBLE } from 'store/ui'
 import { firebase, signOut, getUsersProfile } from 'utils/firebase'
 
 import Avatar from 'components/Avatar'
-import { NonSelectableText } from 'components/Text'
 
 const DropdownButton = styled.div`
   cursor: pointer;
@@ -37,6 +36,10 @@ const Username = styled.span`
   &:hover {
     background: ${(p) => p.theme.colors.primary.light};
   }
+`
+
+const NonSelectableText = styled.span`
+  user-select: none;
 `
 
 const StyledButton = styled(Button)`
@@ -124,7 +127,7 @@ const LeftHeader = () => {
   }
 
   const onToggleSideMenu = (boolean) => {
-    dispatch({ type: SET_SIDEMENU_STATE, payload: boolean })
+    dispatch({ type: SET_SIDEMENU_VISIBLE, payload: boolean })
   }
 
   if (ui.isMobile) {

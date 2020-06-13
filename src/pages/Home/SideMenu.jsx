@@ -8,11 +8,10 @@ import './SideMenu.less'
 
 import { useCountdown } from 'hooks/useCountdown'
 import { useStore } from 'store'
-import { SET_SIDEMENU_STATE, SET_GLOBAL_MESSAGE } from 'store/ui'
+import { SET_SIDEMENU_VISIBLE, SET_GLOBAL_MESSAGE } from 'store/ui'
 import { firebase, signOut } from 'utils/firebase'
 
 import Avatar from 'components/Avatar'
-import { NonSelectableText } from 'components/Text'
 
 const UserInfo = styled.div`
   margin: ${(p) => p.theme.spacing.xxs};
@@ -23,7 +22,8 @@ const UserInfo = styled.div`
   align-items: center;
 `
 
-const Username = styled(NonSelectableText)`
+const Username = styled.span`
+  user-select: none;
   margin: 0 auto ${(p) => p.theme.spacing.sm};
   text-align: center;
 `
@@ -43,6 +43,10 @@ const MenuButton = styled.button`
   }
 `
 
+const NonSelectableText = styled.span`
+  user-select: none;
+`
+
 const SideBar = () => {
   const [{ auth, ui }, dispatch] = useStore()
   const [RVEdisabled, setRVEDisabled] = useState(false)
@@ -54,14 +58,14 @@ const SideBar = () => {
   const countdown = useCountdown({ seconds: 60, onFinish: onTimerFinish })
 
   const onSetSideMenuState = ({ isOpen }) => {
-    dispatch({ type: SET_SIDEMENU_STATE, payload: isOpen })
+    dispatch({ type: SET_SIDEMENU_VISIBLE, payload: isOpen })
   }
 
   const closeMenuOnEsc = (e) => {
     e = e || window.event
 
     if (e.key === 'Escape' || e.keyCode === 27) {
-      dispatch({ type: SET_SIDEMENU_STATE, payload: false })
+      dispatch({ type: SET_SIDEMENU_VISIBLE, payload: false })
     }
   }
 

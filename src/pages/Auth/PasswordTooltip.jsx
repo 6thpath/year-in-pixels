@@ -1,19 +1,24 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 
+import { useStore } from 'store'
+
 import Tooltip from 'components/Tooltip'
 
-const StyledText = styled.p`
+const Text = styled.p`
   margin: 0;
 `
 
-const Info = styled.div`
+const Container = styled.div`
   position: absolute;
   top: 4px;
   right: 4px;
   z-index: 2;
+
+  &:hover {
+    cursor: pointer;
+  }
 `
 
 const StyledIcon = styled(QuestionCircleOutlined)`
@@ -26,27 +31,25 @@ const StyledIcon = styled(QuestionCircleOutlined)`
 `
 
 const PasswordTooltip = () => {
+  const [{ ui }] = useStore()
+
   return (
     <Tooltip
       type='info'
-      placement='topRight'
+      placement={ui.isMobile ? 'topRight' : 'right'}
       title={
         <div>
-          <StyledText>Password rules:</StyledText>
-          <StyledText>- Minimum 6 characters length.</StyledText>
-          <StyledText>- Accept letters and digits only.</StyledText>
+          <Text>Password rules:</Text>
+          <Text>- Minimum 6 characters length.</Text>
+          <Text>- Accept letters and digits only.</Text>
         </div>
       }
     >
-      <Info>
+      <Container>
         <StyledIcon />
-      </Info>
+      </Container>
     </Tooltip>
   )
-}
-
-PasswordTooltip.propTypes = {
-  title: PropTypes.any,
 }
 
 export default PasswordTooltip

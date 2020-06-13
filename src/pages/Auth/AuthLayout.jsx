@@ -33,7 +33,7 @@ const FormContainer = styled.div`
   height: 450px;
   position: relative;
   background-color: #fff;
-  box-shadow: ${(p) => p.theme.shadows.md};
+  box-shadow: 0px 1px 8px 0px rgba(0, 0, 0, 0.3);
   border-radius: ${(p) => p.theme.radius.lg};
 `
 
@@ -100,6 +100,7 @@ const AuthLayout = ({ history, history: { location } }) => {
 
             <Line />
           </Title>
+
           <Transition
             native
             items={location}

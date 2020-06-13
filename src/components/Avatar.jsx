@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Avatar as AntdAvatar, Badge } from 'antd'
+import { Avatar as AntAvatar, Badge } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 
-const StyledAvatar = styled(AntdAvatar)`
+const StyledAvatar = styled(AntAvatar)`
   user-select: none;
 `
 

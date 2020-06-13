@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { DatePicker } from 'antd'
 
 import { useStore } from 'store'
-import { SET_DATETIME } from 'store/data'
+import { SET_YEAR } from 'store/data'
 
 const StyledDatePicker = styled(DatePicker)`
   margin-left: ${(p) => p.theme.spacing.xs};
@@ -19,7 +19,7 @@ const RightHeader = () => {
   const [{ data }, dispatch] = useStore()
 
   const onDateChange = (date) => {
-    dispatch({ type: SET_DATETIME, payload: date })
+    dispatch({ type: SET_YEAR, payload: date })
   }
 
   return (

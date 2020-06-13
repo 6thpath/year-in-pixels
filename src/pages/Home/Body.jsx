@@ -6,7 +6,7 @@ import { useTransition, animated } from 'react-spring'
 import { PIXELS } from 'constants/Collection'
 import { useStore } from 'store'
 import { SET_DATA } from 'store/data'
-import { SET_SELECTIONS_VISIBILITY } from 'store/ui'
+import { SET_MOOD_MODAL_VISIBLE } from 'store/ui'
 import { db } from 'utils/firebase'
 import theme from 'theme'
 
@@ -152,7 +152,7 @@ const Body = () => {
   }
 
   const openSelection = () => {
-    dispatch({ type: SET_SELECTIONS_VISIBILITY, payload: true })
+    dispatch({ type: SET_MOOD_MODAL_VISIBLE, payload: true })
   }
 
   if (!data.selectedYear) {
@@ -186,7 +186,7 @@ const Body = () => {
                   return (
                     <Cell
                       key={_index}
-                      {...(dates[month].dates[day].key === data.todayKey && {
+                      {...(dates[month].dates[day].key === data.todayDataKey && {
                         isMobile: ui.isMobile,
                         today: true,
                         onClick: openSelection,

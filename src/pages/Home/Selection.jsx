@@ -2,10 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Modal } from 'antd'
 
-import './Selection.less'
-
 import { useStore } from 'store'
-import { SET_SELECTIONS_VISIBILITY, SET_GLOBAL_MESSAGE } from 'store/ui'
+import { SET_MOOD_MODAL_VISIBLE, SET_GLOBAL_MESSAGE } from 'store/ui'
 import { db } from 'utils/firebase'
 import theme from 'theme'
 
@@ -64,20 +62,20 @@ const Selection = () => {
   const [{ auth, data, ui }, dispatch] = useStore()
 
   const onCloseModal = () => {
-    dispatch({ type: SET_SELECTIONS_VISIBILITY, payload: false })
+    dispatch({ type: SET_MOOD_MODAL_VISIBLE, payload: false })
   }
 
   const onSelect = (emt) => {
     if (Object.keys(data.data).length) {
       db.collection('pixels')
         .doc(auth.user.uid)
-        .update({ [data.todayKey]: emt })
+        .update({ [data.todayDataKey]: emt })
         .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
         .finally(onCloseModal)
     } else {
       db.collection('pixels')
         .doc(auth.user.uid)
-        .set({ [data.todayKey]: emt })
+        .set({ [data.todayDataKey]: emt })
         .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
         .finally(onCloseModal)
     }
@@ -87,9 +85,9 @@ const Selection = () => {
     <Modal
       title={null}
       footer={null}
-      wrapClassName='styled-modal'
+      wrapClassName='styled-mood-modal'
       closable={false}
-      visible={ui.isSltVisible}
+      visible={ui.isMoodModalVisible}
       maskClosable
       onCancel={onCloseModal}
     >

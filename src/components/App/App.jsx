@@ -4,8 +4,8 @@ import { message } from 'antd'
 
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useStore } from 'store'
-import { SET_AUTH_USER, CLEAR_AUTH_USER } from 'store/auth'
-import { CLEAR_DATA } from 'store/data'
+import { SET_AUTH_USER, RESET_AUTH_STORE } from 'store/auth'
+import { RESET_DATA_STORE } from 'store/data'
 import { SET_IS_MOBILE, SET_GLOBAL_MESSAGE, RESET_UI_STORE } from 'store/ui'
 import { firebase, getUsersProfile } from 'utils/firebase'
 import theme from 'theme'
@@ -17,9 +17,10 @@ import ScrollToTop from './ScrollToTop'
 import AppLayout from './AppLayout'
 
 const App = () => {
-  const [loading, setLoading] = useState(true)
   const [{ auth, ui }, dispatch] = useStore()
+  const [loading, setLoading] = useState(true)
 
+  // Switch to mobile layout when screen size is match
   const windowSize = useWindowSize()
   const isMobile = windowSize.width <= parseInt(theme.screen.sm, 10)
 
@@ -27,15 +28,15 @@ const App = () => {
     dispatch({ type: SET_IS_MOBILE, payload: isMobile })
   }, [dispatch, isMobile])
 
+  // Update auth user when login or reset store when logout
   useEffect(() => {
     firebase.auth().onAuthStateChanged((authUser) => {
       if (authUser) {
         dispatch({ type: SET_AUTH_USER, payload: { user: getUsersProfile(authUser) } })
       } else {
         // User is signed out.
-        window.localStorage.removeItem('accessToken')
-        dispatch({ type: CLEAR_AUTH_USER })
-        dispatch({ type: CLEAR_DATA })
+        dispatch({ type: RESET_AUTH_STORE })
+        dispatch({ type: RESET_DATA_STORE })
         dispatch({ type: RESET_UI_STORE })
       }
 
@@ -43,6 +44,7 @@ const App = () => {
     })
   }, [dispatch])
 
+  // Notification
   useEffect(() => {
     let hideFunction
 

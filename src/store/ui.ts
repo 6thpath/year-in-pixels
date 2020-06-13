@@ -1,10 +1,12 @@
+import { IAction } from './_types'
+
 /**
  * Actions types
  */
 export const SET_IS_MOBILE = 'SET_IS_MOBILE'
 export const SET_GLOBAL_MESSAGE = 'SET_GLOBAL_MESSAGE'
-export const SET_SIDEMENU_STATE = 'SET_SIDEMENU_STATE'
-export const SET_SELECTIONS_VISIBILITY = 'SET_SELECTIONS_VISIBILITY'
+export const SET_SIDEMENU_VISIBLE = 'SET_SIDEMENU_VISIBLE'
+export const SET_MOOD_MODAL_VISIBLE = 'SET_MOOD_MODAL_VISIBLE'
 export const RESET_UI_STORE = 'RESET_UI_STORE'
 
 /**
@@ -15,12 +17,7 @@ export const uiInitialState = {
   globalMessage: '',
   globalMessageType: '',
   isSideMenuOpen: false,
-  isSltVisible: false,
-}
-
-interface IAction {
-  type: string
-  payload: any
+  isMoodModalVisible: false,
 }
 
 /**
@@ -43,26 +40,26 @@ export const uiReducer = (state = uiInitialState, action: IAction) => {
       }
     }
 
-    case SET_SIDEMENU_STATE: {
+    case SET_SIDEMENU_VISIBLE: {
       return {
         ...state,
         isSideMenuOpen: action.payload,
       }
     }
 
-    case SET_SELECTIONS_VISIBILITY: {
+    case SET_MOOD_MODAL_VISIBLE: {
       return {
         ...state,
-        isSltVisible: action.payload,
+        isMoodModalVisible: action.payload,
       }
     }
 
     case RESET_UI_STORE: {
-      const { isMobile, ...rest } = uiInitialState
+      const { isMobile, ...restUIInitialState } = uiInitialState
 
       return {
         ...state,
-        ...rest,
+        ...restUIInitialState,
       }
     }
 
