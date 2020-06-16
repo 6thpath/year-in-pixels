@@ -231,7 +231,7 @@ const Body = () => {
                         id: 't-today-square',
                         isMobile: ui.isMobile,
                         today: true,
-                        openMoodModal,
+                        onClick: openMoodModal,
                       })}
                       background={dates[month].dates[day].status}
                     />
