@@ -277,6 +277,7 @@ const SignUpForm = ({ history, style }) => {
               type='password'
               labelId='reg-password-label'
               borderId='reg-password-border'
+              style={{ paddingRight: 30 }}
             />
             <Label id='reg-password-label'>Password</Label>
             <FocusBorder id='reg-password-border' hasText={!!password.length} strength={passwordStrength} />

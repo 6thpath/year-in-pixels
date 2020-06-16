@@ -76,7 +76,7 @@ const MoodModal = () => {
     } else {
       db.collection(PIXELS)
         .doc(auth.user.uid)
-        .set({ [data.todayDataKey]: mood })
+        .set({ [data.todayDataKey]: mood, shareWith: [] })
         .catch((error) => dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } }))
         .finally(onCloseModal)
     }

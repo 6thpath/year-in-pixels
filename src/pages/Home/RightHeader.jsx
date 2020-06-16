@@ -4,6 +4,7 @@ import { DatePicker } from 'antd'
 
 import { useStore } from 'store'
 import { SET_YEAR } from 'store/data'
+// import { firebase } from 'utils/firebase'
 
 const StyledDatePicker = styled(DatePicker)`
   input {

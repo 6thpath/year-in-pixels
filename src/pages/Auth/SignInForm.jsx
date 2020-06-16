@@ -97,6 +97,22 @@ const Input = styled.input`
   }
 `
 
+const ForgotPassword = styled.div`
+  user-select: none;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 2;
+  font-size: ${(p) => p.theme.font.size.xxs};
+  color: ${(p) => p.theme.colors.black};
+  cursor: pointer;
+  transition: all 0.4s;
+
+  &:hover {
+    color: ${(p) => p.theme.colors.grey[500]};
+  }
+`
+
 const ButtonsGroup = styled.div`
   width: 100%;
 
@@ -203,6 +219,30 @@ const SignInForm = ({ history, style }) => {
       })
   }
 
+  const requestPasswordReset = () => {
+    if (!email || !emailRegex.test(email)) {
+      if (!email) {
+        setEmailHasError('Please input your email first')
+      } else {
+        setEmailHasError('Please input a valid email address')
+      }
+      return emailRef.current.focus()
+    }
+
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        dispatch({
+          type: SET_GLOBAL_MESSAGE,
+          payload: { message: `A password reset email has been sent to ${email}`, type: 'success' },
+        })
+      })
+      .catch((error) => {
+        dispatch({ type: SET_GLOBAL_MESSAGE, payload: { message: error.message, type: 'error' } })
+      })
+  }
+
   const toSignUp = () => {
     history.push(Routes.SIGN_UP)
   }
@@ -238,9 +278,11 @@ const SignInForm = ({ history, style }) => {
               type='password'
               labelId='password-label'
               borderId='password-border'
+              style={{ paddingRight: 120 }}
             />
             <Label id='password-label'>Password</Label>
             <FocusBorder hasText={!!password.length} hasError={!!passwordHasError} id='password-border' />
+            <ForgotPassword onClick={requestPasswordReset}>Forgot password?</ForgotPassword>
           </FormItem>
         </Tooltip>
 

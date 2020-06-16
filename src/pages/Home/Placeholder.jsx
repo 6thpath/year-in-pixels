@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { CalendarOutlined } from '@ant-design/icons'
 import { useTransition, animated } from 'react-spring'
@@ -20,7 +21,7 @@ const Text = styled.p`
   font-size: ${(p) => p.theme.font.size.md};
 `
 
-const Placeholder = () => {
+const Placeholder = ({ message }) => {
   const transitions = useTransition(true, null, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -32,10 +33,14 @@ const Placeholder = () => {
       item && (
         <AnimatedContainer key={key} style={props}>
           <CalendarOutlined style={{ fontSize: 50 }} />
-          <Text>No year selected</Text>
+          <Text>{message}</Text>
         </AnimatedContainer>
       )
   )
+}
+
+Placeholder.propTypes = {
+  message: PropTypes.string,
 }
 
 export default Placeholder

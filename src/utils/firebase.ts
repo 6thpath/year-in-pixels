@@ -1,5 +1,5 @@
 // Firebase App (the core Firebase SDK) is always required and must be listed first
-import * as firebase from 'firebase/app'
+import firebase from 'firebase/app'
 
 // If you enabled Analytics in your project, add the Firebase SDK for Analytics
 import 'firebase/analytics'
@@ -10,21 +10,16 @@ import 'firebase/firestore'
 
 import { firebaseConfig } from './config'
 
+firebase.initializeApp(firebaseConfig)
+
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 const facebookProvider = new firebase.auth.FacebookAuthProvider()
 
-export { firebase, googleProvider, facebookProvider }
+const db = firebase.firestore()
 
-function initFirebase() {
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig)
-}
+export { firebase, db, googleProvider, facebookProvider }
 
-initFirebase()
-
-export const db = firebase.firestore()
-
-export function getUsersProfile(user) {
+export function getUsersProfile(user: any) {
   return {
     uid: user.uid,
     name: user.displayName,

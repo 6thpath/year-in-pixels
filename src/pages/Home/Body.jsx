@@ -10,6 +10,7 @@ import { SET_MOOD_MODAL_VISIBLE, SET_TUTORIAL_VISIBLE } from 'store/ui'
 import { db } from 'utils/firebase'
 import theme from 'theme'
 
+import Loading from 'components/App/Loading'
 import Placeholder from './Placeholder'
 
 const Container = styled.div`
@@ -104,6 +105,8 @@ const Body = () => {
   const [{ auth, data, ui }, dispatch] = useStore()
   const [dates, setDates] = useState({})
   const [selectedMonth, setSelectedMonth] = useState(null)
+  const [loaded, setLoaded] = useState(false)
+  const [hasError, setHasError] = useState('')
 
   const transitions = useTransition(data.selectedYear, null, {
     from: { opacity: 0, transform: 'scale(0.8)' },
@@ -116,13 +119,20 @@ const Body = () => {
       const unsubscribe = db
         .collection(PIXELS)
         .doc(auth.user.uid)
-        .onSnapshot((doc) => {
-          if (doc.exists) dispatch({ type: SET_DATA, payload: doc.data() })
-        })
+        .onSnapshot(
+          (doc) => {
+            if (!loaded) setLoaded(true)
+            if (doc.exists) dispatch({ type: SET_DATA, payload: doc.data() })
+          },
+          (error) => {
+            if (!loaded) setLoaded(true)
+            setHasError(error.message)
+          }
+        )
 
       return () => unsubscribe()
     }
-  }, [auth.user.uid, dispatch])
+  }, [loaded, auth.user.uid, dispatch])
 
   useEffect(() => {
     if (data.selectedYear) {
@@ -166,7 +176,7 @@ const Body = () => {
     return Array.from({ length: amount }, (_, index) => <Cell key={index} type='nodate' />)
   }
 
-  const openSelection = () => {
+  const openMoodModal = () => {
     if (ui.tutorialVisible) {
       dispatch({ type: SET_TUTORIAL_VISIBLE, payload: false })
     }
@@ -174,8 +184,16 @@ const Body = () => {
     dispatch({ type: SET_MOOD_MODAL_VISIBLE, payload: true })
   }
 
+  if (!loaded) {
+    return <Loading />
+  }
+
   if (!data.selectedYear) {
-    return <Placeholder />
+    return <Placeholder message='No year selected' />
+  }
+
+  if (hasError) {
+    return <Placeholder message={hasError} />
   }
 
   return transitions.map(
@@ -213,7 +231,7 @@ const Body = () => {
                         id: 't-today-square',
                         isMobile: ui.isMobile,
                         today: true,
-                        onClick: openSelection,
+                        openMoodModal,
                       })}
                       background={dates[month].dates[day].status}
                     />
