@@ -49,6 +49,21 @@ You'll need to enable these 3 methods on firebase authen.
 - [Google Sign-In](https://firebase.google.com/docs/auth/web/google-signin#before_you_begin)
 - [Facebook Login](https://firebase.google.com/docs/auth/web/facebook-login#before_you_begin)
 
+### Firestore rules
+
+```text
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow only authenticated content owners access
+    match /pixels/{userId} {
+      allow write: if request.auth.uid == userId
+      allow read: if request.auth.uid == userId || (request.auth.uid in resource.data.shareWith)
+    }
+  }
+}
+```
+
 ### Start development server
 
 And start the application with `npm start` or `yarn start` that will run the app in development mode.
