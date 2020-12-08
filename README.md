@@ -1,4 +1,4 @@
-# Year In Pixels ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)
+# Year In Pixels
 
 > A “Year In Pixels” is a colorful way to track the year’s moods, habits, or anything else.
 > It’s also very efficient, fitting all days of the year into a single page. Once you get all the squares filled in, it looks pretty and you can gain some insights into your moods. - [Wellella](https://wellella.com/bullet-journal-year-in-pixels/#:~:text=A%20%E2%80%9CYear%20In%20Pixels%E2%80%9D%20is,some%20insights%20into%20your%20moods.)
@@ -23,7 +23,7 @@ There're 3 steps:
 - [Register your app with Firebase](https://firebase.google.com/docs/web/setup?gclid=EAIaIQobChMI7cnV_-n-6QIVxxwrCh3NmwnyEAAYASABEgJ0yvD_BwE#register-app)
 - [Firebase config object](https://firebase.google.com/docs/web/setup?gclid=EAIaIQobChMI7cnV_-n-6QIVxxwrCh3NmwnyEAAYASABEgJ0yvD_BwE#config-object)
 
-### Replacing Firebase config object
+### Replace Firebase config object
 
 - Create file `config.ts` in `src/utils/`
 - Export config. E.g.
